@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 import ReceiptCard from "../../components/ReceiptCard";
 import ReceiptForm from "../../components/ReceiptForm";
 import SummaryCard from "../../components/SummaryCard";
 import DashboardStats from "../../components/DashboardStats";
 import CategoryBreakdown from "../../components/CategoryBreakdown";
-import { useRouter } from "next/navigation";
 
 type Receipt = {
   id: string;
@@ -15,15 +15,12 @@ type Receipt = {
   amount: number;
   category: string;
   image_url?: string;
+  user_id?: string;
 };
 
 export default function Dashboard() {
-    const router = useRouter();
+  const router = useRouter();
 
-async function handleLogout() {
-  await supabase.auth.signOut();
-  router.push("/login");
-}
   const [vendor, setVendor] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
@@ -33,10 +30,25 @@ async function handleLogout() {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [editingReceipt, setEditingReceipt] = useState<Receipt | null>(null);
 
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    router.push("/login");
+  }
+
   async function loadReceipts() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
     const { data, error } = await supabase
       .from("receipts")
       .select("*")
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -72,10 +84,20 @@ async function handleLogout() {
     const confirmed = confirm(`Delete receipt from ${receipt.vendor}?`);
     if (!confirmed) return;
 
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      alert("You must be logged in.");
+      return;
+    }
+
     const { error } = await supabase
       .from("receipts")
       .delete()
-      .eq("id", receipt.id);
+      .eq("id", receipt.id)
+      .eq("user_id", user.id);
 
     if (error) {
       alert(error.message);
@@ -135,7 +157,8 @@ async function handleLogout() {
           amount: Number(amount),
           category,
         })
-        .eq("id", editingReceipt.id);
+        .eq("id", editingReceipt.id)
+        .eq("user_id", user.id);
 
       if (error) {
         alert(error.message);
@@ -230,21 +253,20 @@ async function handleLogout() {
     <main className="min-h-screen bg-slate-950 text-white">
       <div className="mx-auto max-w-6xl p-8">
         <div className="flex items-center justify-between">
-  <div>
-    <h1 className="text-4xl font-bold">📸 Receipt Vault</h1>
+          <div>
+            <h1 className="text-4xl font-bold">📸 Receipt Vault</h1>
+            <p className="mt-2 text-slate-400">
+              Track and organize your receipts.
+            </p>
+          </div>
 
-    <p className="mt-2 text-slate-400">
-      Track and organize your receipts.
-    </p>
-  </div>
-
-  <button
-    onClick={handleLogout}
-    className="rounded-xl bg-slate-800 px-5 py-3 font-semibold hover:bg-slate-700"
-  >
-    Logout
-  </button>
-</div>
+          <button
+            onClick={handleLogout}
+            className="rounded-xl bg-slate-800 px-5 py-3 font-semibold hover:bg-slate-700"
+          >
+            Logout
+          </button>
+        </div>
 
         <DashboardStats receipts={filteredReceipts} />
 
