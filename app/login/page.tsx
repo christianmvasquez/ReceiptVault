@@ -10,10 +10,12 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isSigningIn, setIsSigningIn] = useState(false);
 
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
-    setMessage("");
+    setIsSigningIn(true);
+    setMessage("Signing in...");
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -22,6 +24,7 @@ export default function LoginPage() {
 
     if (error) {
       setMessage(error.message);
+      setIsSigningIn(false);
       return;
     }
 
@@ -60,9 +63,10 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-[#6D5EF5] p-4 font-semibold text-white hover:bg-[#5B4CF0]"
+            disabled={isSigningIn}
+            className="w-full rounded-xl bg-[#6D5EF5] p-4 font-semibold text-white hover:bg-[#5B4CF0] disabled:cursor-not-allowed disabled:opacity-70"
           >
-            Sign In
+            {isSigningIn ? "Signing In..." : "Sign In"}
           </button>
 
           <Link

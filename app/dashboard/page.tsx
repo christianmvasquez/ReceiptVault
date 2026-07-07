@@ -18,6 +18,10 @@ type Receipt = {
   user_id?: string;
 };
 
+function hasActiveSubscription(metadata: Record<string, unknown>) {
+  return metadata.subscribed === true || metadata.subscribed === "true";
+}
+
 export default function Dashboard() {
   const router = useRouter();
 
@@ -46,7 +50,7 @@ export default function Dashboard() {
       return;
     }
 
-    if (user.user_metadata?.subscribed !== true) {
+    if (!hasActiveSubscription(user.user_metadata || {})) {
       router.push("/pricing");
       return;
     }
