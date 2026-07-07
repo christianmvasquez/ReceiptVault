@@ -36,6 +36,7 @@ async function markSubscribed(session: Stripe.Checkout.Session) {
   const metadata = session.metadata || {};
   const email = metadata.email || session.customer_details?.email || "";
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const passwordSetupRedirect = `${siteUrl}/auth/callback?next=/set-password`;
 
   if (!email) {
     throw new Error("Checkout session completed without an email address.");
@@ -73,12 +74,21 @@ async function markSubscribed(session: Stripe.Checkout.Session) {
     });
 
     if (error) throw error;
+
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+      email,
+      {
+        redirectTo: passwordSetupRedirect,
+      }
+    );
+
+    if (resetError) throw resetError;
     return;
   }
 
   const { error } = await supabase.auth.admin.inviteUserByEmail(email, {
     data: userMetadata,
-    redirectTo: `${siteUrl}/auth/callback?next=/dashboard`,
+    redirectTo: passwordSetupRedirect,
   });
 
   if (error) throw error;

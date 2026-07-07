@@ -14,7 +14,7 @@ export default function CheckEmailPage() {
 
         <p className="mt-5 leading-7 text-gray-500">
           Receiptr is creating your subscriber account. Use the secure email
-          link from Supabase to set your password and sign in.
+          link from Supabase to set or reset your password, then sign in.
         </p>
 
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
