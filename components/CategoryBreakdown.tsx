@@ -5,8 +5,6 @@ type Receipt = {
   category: string;
 };
 
-const estimatedTaxRate = 0.25;
-
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -29,7 +27,6 @@ export default function CategoryBreakdown({
   const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
   const max = sorted.length ? sorted[0][1] : 1;
   const totalWriteOffs = sorted.reduce((sum, [, total]) => sum + total, 0);
-  const estimatedSavings = totalWriteOffs * estimatedTaxRate;
 
   return (
     <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -37,14 +34,14 @@ export default function CategoryBreakdown({
         <div>
           <h2 className="text-2xl font-semibold">Write-Offs by Category</h2>
           <p className="mt-2 text-gray-500">
-            Track deductible spending and see where your biggest savings may be.
+            Track possible business deductions by category before tax time.
           </p>
         </div>
 
         <div className="rounded-2xl bg-violet-50 px-5 py-4 text-violet-900">
-          <p className="text-sm font-semibold">Estimated Savings</p>
+          <p className="text-sm font-semibold">Potential Deductions</p>
           <p className="mt-1 text-2xl font-bold">
-            {formatCurrency(estimatedSavings)}
+            {formatCurrency(totalWriteOffs)}
           </p>
         </div>
       </div>
@@ -70,14 +67,15 @@ export default function CategoryBreakdown({
 
         {sorted.length === 0 && (
           <p className="rounded-2xl bg-gray-50 p-5 text-gray-500">
-            Upload receipts to start tracking write-offs and estimated savings.
+            Upload receipts to start tracking possible write-offs.
           </p>
         )}
       </div>
 
       <p className="mt-6 text-sm text-gray-400">
-        Savings are estimates for planning only. Confirm deductions with a tax
-        professional.
+        Write-offs usually reduce taxable income, not taxes dollar-for-dollar.
+        Eligibility depends on business use and tax rules. Confirm deductions
+        with a tax professional.
       </p>
     </div>
   );

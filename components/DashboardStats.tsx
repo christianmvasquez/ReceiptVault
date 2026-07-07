@@ -10,8 +10,6 @@ type DashboardStatsProps = {
   receipts: Receipt[];
 };
 
-const estimatedTaxRate = 0.25;
-
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -24,8 +22,6 @@ export default function DashboardStats({ receipts }: DashboardStatsProps) {
     (sum, receipt) => sum + Number(receipt.amount),
     0
   );
-
-  const estimatedSavings = totalWriteOffs * estimatedTaxRate;
 
   const categoryTotals = receipts.reduce<Record<string, number>>(
     (totals, receipt) => {
@@ -52,12 +48,14 @@ export default function DashboardStats({ receipts }: DashboardStatsProps) {
 
       <div className="rounded-3xl bg-[#6D5EF5] p-5 text-white shadow-sm">
         <p className="text-sm font-medium text-violet-100">
-          Estimated Tax Savings
+          Possible Taxable Income Reduction
         </p>
         <p className="mt-2 text-3xl font-bold">
-          {formatCurrency(estimatedSavings)}
+          {formatCurrency(totalWriteOffs)}
         </p>
-        <p className="mt-2 text-sm text-violet-100">Based on a 25% estimate</p>
+        <p className="mt-2 text-sm text-violet-100">
+          If expenses qualify as deductible
+        </p>
       </div>
 
       <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
