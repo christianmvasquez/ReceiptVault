@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { createClient } from "../../lib/supabase/client";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function LoginPage() {
   const supabase = useMemo(() => createClient(), []);
@@ -58,8 +59,10 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-white px-6">
       <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-10 shadow-sm">
-        <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-          Welcome to Receiptr
+        <BrandLogo className="h-16 w-auto" />
+
+        <h1 className="mt-8 text-4xl font-bold tracking-tight text-gray-900">
+          Welcome back
         </h1>
 
         <p className="mt-3 text-gray-500">

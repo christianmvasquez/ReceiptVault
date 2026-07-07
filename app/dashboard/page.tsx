@@ -8,6 +8,7 @@ import ReceiptForm from "../../components/ReceiptForm";
 import SummaryCard from "../../components/SummaryCard";
 import DashboardStats from "../../components/DashboardStats";
 import CategoryBreakdown from "../../components/CategoryBreakdown";
+import BrandLogo from "@/components/BrandLogo";
 
 type Receipt = {
   id: string;
@@ -351,7 +352,7 @@ export default function Dashboard() {
       <main className="flex min-h-screen items-center justify-center bg-white text-gray-900">
         <div className="rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-sm">
           <p className="text-lg font-semibold">Checking subscription...</p>
-          <p className="mt-2 text-gray-500">Receiptr is loading your account.</p>
+          <p className="mt-2 text-gray-500">Loading your account.</p>
         </div>
       </main>
     );
@@ -362,7 +363,7 @@ export default function Dashboard() {
       <div className="mx-auto max-w-6xl p-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">Receiptr</h1>
+            <BrandLogo className="h-16 w-auto" />
             <p className="mt-2 text-gray-500">
               Simple receipt tracking for everyday spending.
             </p>

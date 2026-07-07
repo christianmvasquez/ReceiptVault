@@ -1,4 +1,5 @@
 import Link from "next/link";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function Home() {
   return (
@@ -6,9 +7,7 @@ export default function Home() {
 
       {/* Navbar */}
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-8 py-8">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Receiptr
-        </h1>
+        <BrandLogo className="h-16 w-auto" />
 
         <Link
           href="/login"
@@ -32,7 +31,7 @@ export default function Home() {
         </h2>
 
         <p className="mx-auto mt-8 max-w-3xl text-xl leading-9 text-gray-600">
-          Receiptr automatically stores, categorizes, and organizes your
+          Automatically store, categorize, and organize your
           receipts so you always know where your money goes.
         </p>
 

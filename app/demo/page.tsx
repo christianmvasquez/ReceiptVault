@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import BrandLogo from "@/components/BrandLogo";
 
 const sampleReceipts = [
   {
@@ -105,8 +106,8 @@ export default function DemoPage() {
   return (
     <main className="min-h-screen bg-gray-50 px-6 py-8 text-gray-900">
       <nav className="mx-auto flex max-w-7xl items-center justify-between">
-        <Link href="/" className="text-3xl font-bold tracking-tight">
-          Receiptr
+        <Link href="/" aria-label="Receiptr home">
+          <BrandLogo className="h-14 w-auto" />
         </Link>
 
         <div className="flex items-center gap-3">

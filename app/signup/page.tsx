@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import BrandLogo from "@/components/BrandLogo";
 
 type SignupForm = {
   fullName: string;
@@ -45,8 +46,8 @@ export default function SignupPage() {
   return (
     <main className="min-h-screen bg-white px-6 py-8 text-gray-900">
       <nav className="mx-auto flex max-w-6xl items-center justify-between">
-        <Link href="/" className="text-3xl font-bold tracking-tight">
-          Receiptr
+        <Link href="/" aria-label="Receiptr home">
+          <BrandLogo className="h-14 w-auto" />
         </Link>
 
         <Link
@@ -64,11 +65,11 @@ export default function SignupPage() {
           </p>
 
           <h1 className="mt-4 text-5xl font-extrabold leading-tight tracking-tight md:text-6xl">
-            Create your Receiptr account.
+            Create your account.
           </h1>
 
           <p className="mt-6 max-w-2xl text-xl leading-8 text-gray-600">
-            Enter your details, choose the Receiptr Pro subscription, then check
+            Enter your details, choose the Pro subscription, then check
             your email for the secure sign-in setup link after payment.
           </p>
 

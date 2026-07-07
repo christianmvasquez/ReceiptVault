@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import BrandLogo from "@/components/BrandLogo";
 
 type PendingAccount = {
   fullName: string;
@@ -65,8 +66,8 @@ export default function PricingPage() {
   return (
     <main className="min-h-screen bg-white px-6 py-8 text-gray-900">
       <nav className="mx-auto flex max-w-6xl items-center justify-between">
-        <Link href="/" className="text-3xl font-bold tracking-tight">
-          Receiptr
+        <Link href="/" aria-label="Receiptr home">
+          <BrandLogo className="h-14 w-auto" />
         </Link>
 
         <Link
@@ -80,7 +81,7 @@ export default function PricingPage() {
       <section className="mx-auto mt-16 grid max-w-6xl gap-8 lg:grid-cols-[0.9fr_1fr] lg:items-center">
         <div className="rounded-3xl border border-gray-200 bg-white p-10 shadow-sm">
           <p className="text-sm font-semibold text-violet-600">
-            Receiptr Pro
+            Pro Plan
           </p>
 
           <h1 className="mt-4 text-5xl font-bold tracking-tight">
@@ -133,7 +134,7 @@ export default function PricingPage() {
                   What happens next
                 </p>
                 <p className="mt-2 leading-7 text-gray-600">
-                  After payment, Receiptr sends a secure email so you can set
+                  After payment, we send a secure email so you can set
                   your password and sign in to the dashboard.
                 </p>
               </div>

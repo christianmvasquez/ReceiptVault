@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import BrandLogo from "@/components/BrandLogo";
 
 function SetPasswordForm() {
   const searchParams = useSearchParams();
@@ -116,16 +117,14 @@ function SetPasswordForm() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-white px-6 text-gray-900">
       <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-10 shadow-sm">
-        <p className="text-sm font-semibold text-violet-600">
-          Receiptr account
-        </p>
+        <BrandLogo className="h-16 w-auto" />
 
-        <h1 className="mt-4 text-4xl font-bold tracking-tight">
+        <h1 className="mt-8 text-4xl font-bold tracking-tight">
           Set your password.
         </h1>
 
         <p className="mt-3 leading-7 text-gray-500">
-          Create the password you will use when signing in to Receiptr.
+          Create the password you will use when signing in.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
