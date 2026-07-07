@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { createClient } from "../../lib/supabase/client";
 
 export default function LoginPage() {
@@ -24,23 +25,7 @@ export default function LoginPage() {
       return;
     }
 
-    window.location.href = "/pricing";
-  }
-
-  async function handleSignUp() {
-    setMessage("");
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) {
-      setMessage(error.message);
-      return;
-    }
-
-    setMessage("Account created. Check your email, then sign in.");
+    window.location.href = "/dashboard";
   }
 
   return (
@@ -51,7 +36,7 @@ export default function LoginPage() {
         </h1>
 
         <p className="mt-3 text-gray-500">
-          Create an account or sign in to continue.
+          Sign in after your subscription is active.
         </p>
 
         <form onSubmit={handleSignIn} className="mt-8 space-y-4">
@@ -80,13 +65,12 @@ export default function LoginPage() {
             Sign In
           </button>
 
-          <button
-            type="button"
-            onClick={handleSignUp}
-            className="w-full rounded-xl border border-gray-300 p-4 font-semibold text-gray-900 hover:bg-gray-50"
+          <Link
+            href="/signup"
+            className="block w-full rounded-xl border border-gray-300 p-4 text-center font-semibold text-gray-900 hover:bg-gray-50"
           >
             Create Account
-          </button>
+          </Link>
         </form>
 
         {message && (

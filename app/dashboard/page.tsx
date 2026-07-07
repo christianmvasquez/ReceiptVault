@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 import ReceiptCard from "../../components/ReceiptCard";
@@ -29,19 +29,25 @@ export default function Dashboard() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [editingReceipt, setEditingReceipt] = useState<Receipt | null>(null);
+  const [isCheckingAccess, setIsCheckingAccess] = useState(true);
 
   async function handleLogout() {
     await supabase.auth.signOut();
     router.push("/login");
   }
 
-  async function loadReceipts() {
+  const loadReceipts = useCallback(async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
       router.push("/login");
+      return;
+    }
+
+    if (user.user_metadata?.subscribed !== true) {
+      router.push("/pricing");
       return;
     }
 
@@ -57,11 +63,13 @@ export default function Dashboard() {
     }
 
     setReceipts((data as Receipt[]) || []);
-  }
+    setIsCheckingAccess(false);
+  }, [router]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadReceipts();
-  }, []);
+  }, [loadReceipts]);
 
   function startEdit(receipt: Receipt) {
     setEditingReceipt(receipt);
@@ -248,6 +256,17 @@ export default function Dashboard() {
     (sum, receipt) => sum + Number(receipt.amount),
     0
   );
+
+  if (isCheckingAccess) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-white text-gray-900">
+        <div className="rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+          <p className="text-lg font-semibold">Checking subscription...</p>
+          <p className="mt-2 text-gray-500">Receiptr is loading your account.</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-white text-gray-900">

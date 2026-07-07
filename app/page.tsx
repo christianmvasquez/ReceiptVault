@@ -39,15 +39,18 @@ export default function Home() {
         <div className="mt-12 flex justify-center gap-5">
 
           <Link
-            href="/login"
+            href="/signup"
             className="rounded-xl bg-[#6D5EF5] px-8 py-4 text-lg font-semibold text-white transition hover:bg-[#5B4CF0]"
           >
-            Get Started Free
+            Subscribe Now
           </Link>
 
-          <button className="rounded-xl border border-gray-300 px-8 py-4 text-lg font-semibold hover:bg-gray-50">
-            See Demo
-          </button>
+          <Link
+            href="/demo"
+            className="rounded-xl border border-gray-300 px-8 py-4 text-lg font-semibold hover:bg-gray-50"
+          >
+            Try Demo
+          </Link>
 
         </div>
 
