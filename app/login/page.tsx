@@ -24,7 +24,7 @@ export default function LoginPage() {
       return;
     }
 
-    window.location.href = "/dashboard";
+    window.location.href = "/pricing";
   }
 
   async function handleSignUp() {
@@ -40,27 +40,27 @@ export default function LoginPage() {
       return;
     }
 
-    setMessage("Account created. Check your email to confirm your account.");
+    setMessage("Account created. Check your email, then sign in.");
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-white px-6 text-gray-900">
-      <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
-        <h1 className="text-4xl font-bold tracking-tight">
-          Sign in to Receiptr
+    <main className="flex min-h-screen items-center justify-center bg-white px-6">
+      <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-10 shadow-sm">
+        <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+          Welcome to Receiptr
         </h1>
 
         <p className="mt-3 text-gray-500">
-          Manage your receipts and expenses in one clean dashboard.
+          Create an account or sign in to continue.
         </p>
 
         <form onSubmit={handleSignIn} className="mt-8 space-y-4">
           <input
             type="email"
-            placeholder="Email address"
+            placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-xl border border-gray-200 bg-gray-50 p-4 outline-none focus:border-violet-500"
+            className="w-full rounded-xl border border-gray-300 bg-gray-50 p-4 outline-none focus:border-violet-500"
             required
           />
 
@@ -69,24 +69,31 @@ export default function LoginPage() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-xl border border-gray-200 bg-gray-50 p-4 outline-none focus:border-violet-500"
+            className="w-full rounded-xl border border-gray-300 bg-gray-50 p-4 outline-none focus:border-violet-500"
             required
           />
 
-          <button className="w-full rounded-xl bg-[#6D5EF5] p-4 font-semibold text-white hover:bg-[#5B4CF0]">
+          <button
+            type="submit"
+            className="w-full rounded-xl bg-[#6D5EF5] p-4 font-semibold text-white hover:bg-[#5B4CF0]"
+          >
             Sign In
           </button>
 
           <button
             type="button"
             onClick={handleSignUp}
-            className="w-full rounded-xl border border-gray-200 bg-white p-4 font-semibold text-gray-900 hover:bg-gray-50"
+            className="w-full rounded-xl border border-gray-300 p-4 font-semibold text-gray-900 hover:bg-gray-50"
           >
             Create Account
           </button>
         </form>
 
-        {message && <p className="mt-5 text-sm text-gray-500">{message}</p>}
+        {message && (
+          <p className="mt-6 rounded-xl bg-gray-100 p-3 text-center text-sm text-gray-700">
+            {message}
+          </p>
+        )}
       </div>
     </main>
   );
