@@ -1,14 +1,49 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-export default function SetPasswordPage() {
-  const supabase = createClient();
+function SetPasswordForm() {
+  const searchParams = useSearchParams();
+  const supabase = useMemo(() => createClient(), []);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isReady, setIsReady] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    async function prepareSession() {
+      const code = searchParams.get("code");
+
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+        if (error) {
+          setMessage(error.message);
+          return;
+        }
+
+        window.history.replaceState({}, "", "/set-password");
+      }
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        setMessage(
+          "This password link expired or was already used. Start checkout again or request a new setup email."
+        );
+        return;
+      }
+
+      setIsReady(true);
+    }
+
+    prepareSession();
+  }, [searchParams, supabase]);
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -75,7 +110,7 @@ export default function SetPasswordPage() {
 
           <button
             type="submit"
-            disabled={isSaving}
+            disabled={isSaving || !isReady}
             className="w-full rounded-xl bg-[#6D5EF5] p-4 font-semibold text-white hover:bg-[#5B4CF0] disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isSaving ? "Saving..." : "Save Password"}
@@ -89,5 +124,13 @@ export default function SetPasswordPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function SetPasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <SetPasswordForm />
+    </Suspense>
   );
 }
