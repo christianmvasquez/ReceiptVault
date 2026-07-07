@@ -96,11 +96,39 @@ export default function Dashboard() {
     setScanMessage("");
   }
 
-  function readFileAsDataUrl(selectedFile: File) {
+  function readFileAsJpegDataUrl(selectedFile: File) {
     return new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
 
-      reader.onload = () => resolve(String(reader.result));
+      reader.onload = () => {
+        const image = new Image();
+
+        image.onload = () => {
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+
+          if (!context) {
+            reject(new Error("Could not prepare receipt image."));
+            return;
+          }
+
+          canvas.width = image.naturalWidth;
+          canvas.height = image.naturalHeight;
+          context.drawImage(image, 0, 0);
+
+          resolve(canvas.toDataURL("image/jpeg", 0.9));
+        };
+
+        image.onerror = () => {
+          reject(
+            new Error(
+              "This image format could not be read. Try a JPG, PNG, or screenshot."
+            )
+          );
+        };
+
+        image.src = String(reader.result);
+      };
       reader.onerror = () => reject(new Error("Could not read receipt image."));
       reader.readAsDataURL(selectedFile);
     });
@@ -116,7 +144,7 @@ export default function Dashboard() {
     setScanMessage("Reading receipt with AI...");
 
     try {
-      const imageUrl = await readFileAsDataUrl(selectedFile);
+      const imageUrl = await readFileAsJpegDataUrl(selectedFile);
       const response = await fetch("/api/scan-receipt", {
         method: "POST",
         headers: {
@@ -137,8 +165,13 @@ export default function Dashboard() {
       if (data.category) setCategory(String(data.category));
 
       setScanMessage("AI filled the receipt details. Review before saving.");
-    } catch {
-      setScanMessage("AI scan failed. Fill in the fields manually.");
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "AI scan failed. Fill in the fields manually.";
+
+      setScanMessage(message);
     } finally {
       setIsScanning(false);
     }
