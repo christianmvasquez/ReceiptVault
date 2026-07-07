@@ -6,20 +6,29 @@ export default function PricingPage() {
   const [message, setMessage] = useState("");
 
   async function handleSubscribe() {
-    setMessage("");
+  setMessage("Starting checkout...");
 
+  try {
     const response = await fetch("/api/create-checkout-session", {
       method: "POST",
     });
 
     const data = await response.json();
 
+    if (!response.ok) {
+      setMessage(data.error || "Checkout failed.");
+      return;
+    }
+
     if (data.url) {
       window.location.href = data.url;
     } else {
-      setMessage("Unable to start checkout.");
+      setMessage("No checkout URL returned.");
     }
+  } catch (error) {
+    setMessage("Something went wrong starting checkout.");
   }
+}
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-white px-6 text-gray-900">
