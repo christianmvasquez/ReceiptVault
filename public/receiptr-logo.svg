@@ -1,4 +1,4 @@
-<svg width="560" height="150" viewBox="0 0 560 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="510" height="150" viewBox="0 0 510 150" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect x="8" y="15" width="120" height="120" rx="28" fill="#6D5EF5"/>
   <path d="M38 43C38 36.373 43.373 31 50 31H84L106 53V108L96 102L86 108L76 102L66 108L56 102L46 108L38 113V43Z" fill="white"/>
   <path d="M84 31V50C84 51.657 85.343 53 87 53H106L84 31Z" fill="#DDD8FF"/>
@@ -7,6 +7,6 @@
   <rect x="54" y="92" width="35" height="8" rx="4" fill="#111827"/>
   <path d="M106 78C113 66 123 74 115 84L106 95V78Z" fill="white"/>
   <text x="158" y="96" fill="#111827" font-family="Inter, Arial, Helvetica, sans-serif" font-size="72" font-weight="800" letter-spacing="-3.2">Receipt</text>
-  <text x="427" y="96" fill="#6D5EF5" font-family="Inter, Arial, Helvetica, sans-serif" font-size="72" font-weight="800" letter-spacing="-3.2">r</text>
-  <rect x="431" y="111" width="32" height="7" rx="3.5" fill="#6D5EF5"/>
+  <text x="395" y="96" fill="#6D5EF5" font-family="Inter, Arial, Helvetica, sans-serif" font-size="72" font-weight="800" letter-spacing="-3.2">r</text>
+  <rect x="399" y="111" width="32" height="7" rx="3.5" fill="#6D5EF5"/>
 </svg>
