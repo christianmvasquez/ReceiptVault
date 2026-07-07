@@ -18,6 +18,8 @@ function SetPasswordForm() {
       const code = searchParams.get("code");
 
       if (code) {
+        await supabase.auth.signOut();
+
         const { error } = await supabase.auth.exchangeCodeForSession(code);
 
         if (error) {
@@ -35,6 +37,19 @@ function SetPasswordForm() {
       if (!session) {
         setMessage(
           "This password link expired or was already used. Start checkout again or request a new setup email."
+        );
+        return;
+      }
+
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        await supabase.auth.signOut();
+        setMessage(
+          "This browser had an old deleted-user session saved. Open the newest email link again, or try it in a private window."
         );
         return;
       }
