@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "../../lib/supabase";
+import { createClient } from "../../lib/supabase/client";
 import ReceiptCard from "../../components/ReceiptCard";
 import ReceiptForm from "../../components/ReceiptForm";
 import SummaryCard from "../../components/SummaryCard";
@@ -24,6 +24,7 @@ function hasActiveSubscription(metadata: Record<string, unknown>) {
 
 export default function Dashboard() {
   const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
 
   const [vendor, setVendor] = useState("");
   const [amount, setAmount] = useState("");
@@ -68,7 +69,7 @@ export default function Dashboard() {
 
     setReceipts((data as Receipt[]) || []);
     setIsCheckingAccess(false);
-  }, [router]);
+  }, [router, supabase]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect

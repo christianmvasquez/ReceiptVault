@@ -1,16 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { createClient } from "../../lib/supabase/client";
 
 export default function LoginPage() {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isSendingSetup, setIsSendingSetup] = useState(false);
 
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
@@ -29,6 +30,29 @@ export default function LoginPage() {
     }
 
     window.location.href = "/dashboard";
+  }
+
+  async function handleSendSetupEmail() {
+    if (!email) {
+      setMessage("Enter your email first.");
+      return;
+    }
+
+    setIsSendingSetup(true);
+    setMessage("Sending password setup email...");
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/set-password`,
+    });
+
+    if (error) {
+      setMessage(error.message);
+      setIsSendingSetup(false);
+      return;
+    }
+
+    setMessage("Password setup email sent. Check your inbox and spam folder.");
+    setIsSendingSetup(false);
   }
 
   return (
@@ -75,6 +99,15 @@ export default function LoginPage() {
           >
             Create Account
           </Link>
+
+          <button
+            type="button"
+            onClick={handleSendSetupEmail}
+            disabled={isSendingSetup}
+            className="w-full rounded-xl border border-gray-300 p-4 font-semibold text-gray-900 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            {isSendingSetup ? "Sending..." : "Send Password Setup Email"}
+          </button>
         </form>
 
         {message && (
