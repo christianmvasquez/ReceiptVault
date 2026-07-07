@@ -35,6 +35,8 @@ export default function Dashboard() {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [editingReceipt, setEditingReceipt] = useState<Receipt | null>(null);
   const [isCheckingAccess, setIsCheckingAccess] = useState(true);
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanMessage, setScanMessage] = useState("");
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -91,6 +93,55 @@ export default function Dashboard() {
     setAmount("");
     setCategory("");
     setFile(null);
+    setScanMessage("");
+  }
+
+  function readFileAsDataUrl(selectedFile: File) {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = () => reject(new Error("Could not read receipt image."));
+      reader.readAsDataURL(selectedFile);
+    });
+  }
+
+  async function handleFileChange(selectedFile: File | null) {
+    setFile(selectedFile);
+    setScanMessage("");
+
+    if (!selectedFile) return;
+
+    setIsScanning(true);
+    setScanMessage("Reading receipt with AI...");
+
+    try {
+      const imageUrl = await readFileAsDataUrl(selectedFile);
+      const response = await fetch("/api/scan-receipt", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ imageUrl }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setScanMessage(data.error || "AI scan failed. Fill in the fields.");
+        return;
+      }
+
+      if (data.vendor) setVendor(String(data.vendor));
+      if (data.amount) setAmount(String(data.amount));
+      if (data.category) setCategory(String(data.category));
+
+      setScanMessage("AI filled the receipt details. Review before saving.");
+    } catch {
+      setScanMessage("AI scan failed. Fill in the fields manually.");
+    } finally {
+      setIsScanning(false);
+    }
   }
 
   async function handleDelete(receipt: Receipt) {
@@ -305,10 +356,12 @@ export default function Dashboard() {
             category={category}
             file={file}
             isEditing={!!editingReceipt}
+            isScanning={isScanning}
+            scanMessage={scanMessage}
             setVendor={setVendor}
             setAmount={setAmount}
             setCategory={setCategory}
-            setFile={setFile}
+            handleFileChange={handleFileChange}
             handleSubmit={handleSubmit}
             cancelEdit={cancelEdit}
           />

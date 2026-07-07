@@ -4,10 +4,12 @@ type ReceiptFormProps = {
   category: string;
   file: File | null;
   isEditing: boolean;
+  isScanning: boolean;
+  scanMessage: string;
   setVendor: (value: string) => void;
   setAmount: (value: string) => void;
   setCategory: (value: string) => void;
-  setFile: (value: File | null) => void;
+  handleFileChange: (file: File | null) => void;
   handleSubmit: (e: React.FormEvent) => void;
   cancelEdit: () => void;
 };
@@ -16,11 +18,14 @@ export default function ReceiptForm({
   vendor,
   amount,
   category,
+  file,
   isEditing,
+  isScanning,
+  scanMessage,
   setVendor,
   setAmount,
   setCategory,
-  setFile,
+  handleFileChange,
   handleSubmit,
   cancelEdit,
 }: ReceiptFormProps) {
@@ -37,9 +42,16 @@ export default function ReceiptForm({
         <input
           type="file"
           accept="image/*"
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
+          onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
           className="mt-6 w-full rounded-xl border border-gray-200 bg-gray-50 p-3"
         />
+      )}
+
+      {!isEditing && file && (
+        <div className="mt-3 rounded-xl bg-gray-50 p-3 text-sm text-gray-600">
+          <p className="font-semibold text-gray-800">{file.name}</p>
+          <p>{isScanning ? "Reading receipt with AI..." : scanMessage}</p>
+        </div>
       )}
 
       <input
@@ -74,8 +86,15 @@ export default function ReceiptForm({
         <option value="Other">Other</option>
       </select>
 
-      <button className="mt-6 w-full rounded-xl bg-blue-600 p-3 font-semibold text-white hover:bg-blue-700">
-        {isEditing ? "Update Receipt" : "Save Receipt"}
+      <button
+        disabled={isScanning}
+        className="mt-6 w-full rounded-xl bg-blue-600 p-3 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
+      >
+        {isScanning
+          ? "Scanning Receipt..."
+          : isEditing
+            ? "Update Receipt"
+            : "Save Receipt"}
       </button>
 
       {isEditing && (
