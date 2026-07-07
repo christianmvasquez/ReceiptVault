@@ -11,11 +11,15 @@ function SetPasswordForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isReady, setIsReady] = useState(false);
+  const [isCheckingLink, setIsCheckingLink] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     async function prepareSession() {
       const code = searchParams.get("code");
+      const hashParams = new URLSearchParams(window.location.hash.slice(1));
+      const accessToken = hashParams.get("access_token");
+      const refreshToken = hashParams.get("refresh_token");
 
       if (code) {
         await supabase.auth.signOut();
@@ -30,14 +34,32 @@ function SetPasswordForm() {
         window.history.replaceState({}, "", "/set-password");
       }
 
+      if (!code && accessToken && refreshToken) {
+        await supabase.auth.signOut();
+
+        const { error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
+
+        if (error) {
+          setMessage(error.message);
+          setIsCheckingLink(false);
+          return;
+        }
+
+        window.history.replaceState({}, "", "/set-password");
+      }
+
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
       if (!session) {
         setMessage(
-          "This password link expired or was already used. Start checkout again or request a new setup email."
+          "This password link expired or was already used. Open the newest setup email in a private window, or start checkout again."
         );
+        setIsCheckingLink(false);
         return;
       }
 
@@ -51,10 +73,12 @@ function SetPasswordForm() {
         setMessage(
           "This browser had an old deleted-user session saved. Open the newest email link again, or try it in a private window."
         );
+        setIsCheckingLink(false);
         return;
       }
 
       setIsReady(true);
+      setIsCheckingLink(false);
     }
 
     prepareSession();
@@ -128,7 +152,11 @@ function SetPasswordForm() {
             disabled={isSaving || !isReady}
             className="w-full rounded-xl bg-[#6D5EF5] p-4 font-semibold text-white hover:bg-[#5B4CF0] disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isSaving ? "Saving..." : "Save Password"}
+            {isCheckingLink
+              ? "Checking Link..."
+              : isSaving
+                ? "Saving..."
+                : "Save Password"}
           </button>
         </form>
 
