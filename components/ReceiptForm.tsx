@@ -25,7 +25,10 @@ export default function ReceiptForm({
   cancelEdit,
 }: ReceiptFormProps) {
   return (
-    <form onSubmit={handleSubmit} className="rounded-2xl bg-slate-900 p-6">
+    <form
+      onSubmit={handleSubmit}
+      className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"
+    >
       <h2 className="text-2xl font-semibold">
         {isEditing ? "Edit Receipt" : "Add Receipt"}
       </h2>
@@ -35,12 +38,12 @@ export default function ReceiptForm({
           type="file"
           accept="image/*"
           onChange={(e) => setFile(e.target.files?.[0] || null)}
-          className="mt-6 w-full rounded-xl bg-slate-950 p-3"
+          className="mt-6 w-full rounded-xl border border-gray-200 bg-gray-50 p-3"
         />
       )}
 
       <input
-        className="mt-4 w-full rounded-xl bg-slate-950 p-3"
+        className="mt-4 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-blue-500"
         placeholder="Vendor"
         value={vendor}
         onChange={(e) => setVendor(e.target.value)}
@@ -48,7 +51,7 @@ export default function ReceiptForm({
       />
 
       <input
-        className="mt-4 w-full rounded-xl bg-slate-950 p-3"
+        className="mt-4 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-blue-500"
         placeholder="Amount"
         type="number"
         value={amount}
@@ -57,7 +60,7 @@ export default function ReceiptForm({
       />
 
       <select
-        className="mt-4 w-full rounded-xl bg-slate-950 p-3"
+        className="mt-4 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-blue-500"
         value={category}
         onChange={(e) => setCategory(e.target.value)}
         required
@@ -71,7 +74,7 @@ export default function ReceiptForm({
         <option value="Other">Other</option>
       </select>
 
-      <button className="mt-6 w-full rounded-xl bg-blue-500 p-3 font-semibold hover:bg-blue-600">
+      <button className="mt-6 w-full rounded-xl bg-blue-600 p-3 font-semibold text-white hover:bg-blue-700">
         {isEditing ? "Update Receipt" : "Save Receipt"}
       </button>
 
@@ -79,7 +82,7 @@ export default function ReceiptForm({
         <button
           type="button"
           onClick={cancelEdit}
-          className="mt-3 w-full rounded-xl bg-slate-700 p-3 font-semibold hover:bg-slate-600"
+          className="mt-3 w-full rounded-xl border border-gray-200 bg-white p-3 font-semibold hover:bg-gray-50"
         >
           Cancel Edit
         </button>

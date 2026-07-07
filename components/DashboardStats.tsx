@@ -32,37 +32,35 @@ export default function DashboardStats({ receipts }: DashboardStatsProps) {
     {}
   );
 
-  const favoriteCategory =
+  const topCategory =
     Object.entries(categoryCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ||
     "None";
 
   return (
     <div className="mt-8 grid gap-4 md:grid-cols-5">
-      <div className="rounded-2xl bg-slate-900 p-5">
-        <p className="text-sm text-slate-400">Total Spending</p>
+      <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+        <p className="text-sm text-gray-500">Total Spending</p>
         <p className="mt-2 text-2xl font-bold">${totalSpending.toFixed(2)}</p>
       </div>
 
-      <div className="rounded-2xl bg-slate-900 p-5">
-        <p className="text-sm text-slate-400">Receipts</p>
+      <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+        <p className="text-sm text-gray-500">Receipts</p>
         <p className="mt-2 text-2xl font-bold">{receipts.length}</p>
       </div>
 
-      <div className="rounded-2xl bg-slate-900 p-5">
-        <p className="text-sm text-slate-400">Average</p>
-        <p className="mt-2 text-2xl font-bold">
-          ${averageReceipt.toFixed(2)}
-        </p>
+      <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+        <p className="text-sm text-gray-500">Average</p>
+        <p className="mt-2 text-2xl font-bold">${averageReceipt.toFixed(2)}</p>
       </div>
 
-      <div className="rounded-2xl bg-slate-900 p-5">
-        <p className="text-sm text-slate-400">Largest</p>
+      <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+        <p className="text-sm text-gray-500">Largest</p>
         <p className="mt-2 text-2xl font-bold">${largestReceipt.toFixed(2)}</p>
       </div>
 
-      <div className="rounded-2xl bg-slate-900 p-5">
-        <p className="text-sm text-slate-400">Top Category</p>
-        <p className="mt-2 text-2xl font-bold">{favoriteCategory}</p>
+      <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+        <p className="text-sm text-gray-500">Top Category</p>
+        <p className="mt-2 text-2xl font-bold">{topCategory}</p>
       </div>
     </div>
   );

@@ -1,26 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  async function signUp() {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) setMessage(error.message);
-    else setMessage("Account created. Now click Sign In.");
-  }
-
-  async function signIn(e: React.FormEvent) {
+  async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
 
     const { error } = await supabase.auth.signInWithPassword({
@@ -33,21 +21,39 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/dashboard");
+    window.location.href = "/dashboard";
+  }
+
+  async function handleSignUp() {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    setMessage("Account created. You can now sign in.");
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-white">
-      <div className="w-full max-w-md rounded-2xl bg-slate-900 p-8">
-        <h1 className="text-3xl font-bold">Sign in to Vaultly</h1>
+    <main className="flex min-h-screen items-center justify-center bg-white px-6 text-gray-900">
+      <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+        <h1 className="text-4xl font-bold tracking-tight">Sign in to Receiptr</h1>
 
-        <form onSubmit={signIn} className="mt-8 space-y-4">
+        <p className="mt-3 text-gray-500">
+          Manage your receipts and expenses in one clean dashboard.
+        </p>
+
+        <form onSubmit={handleSignIn} className="mt-8 space-y-4">
           <input
             type="email"
             placeholder="Email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-xl bg-slate-950 p-3"
+            className="w-full rounded-xl border border-gray-200 bg-gray-50 p-4 outline-none focus:border-blue-500"
             required
           />
 
@@ -56,23 +62,24 @@ export default function LoginPage() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-xl bg-slate-950 p-3"
+            className="w-full rounded-xl border border-gray-200 bg-gray-50 p-4 outline-none focus:border-blue-500"
             required
           />
 
-          <button className="w-full rounded-xl bg-blue-500 p-3 font-semibold hover:bg-blue-600">
+          <button className="w-full rounded-xl bg-blue-600 p-4 font-semibold text-white hover:bg-blue-700">
             Sign In
+          </button>
+
+          <button
+            type="button"
+            onClick={handleSignUp}
+            className="w-full rounded-xl border border-gray-200 bg-white p-4 font-semibold text-gray-900 hover:bg-gray-50"
+          >
+            Create Account
           </button>
         </form>
 
-        <button
-          onClick={signUp}
-          className="mt-4 w-full rounded-xl bg-slate-800 p-3 font-semibold hover:bg-slate-700"
-        >
-          Create Account
-        </button>
-
-        {message && <p className="mt-4 text-sm text-slate-300">{message}</p>}
+        {message && <p className="mt-5 text-sm text-gray-500">{message}</p>}
       </div>
     </main>
   );

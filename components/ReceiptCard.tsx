@@ -20,17 +20,17 @@ export default function ReceiptCard({
   onEdit,
 }: ReceiptCardProps) {
   return (
-    <div className="rounded-2xl bg-slate-950 p-5 border border-slate-800 shadow-lg">
+    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
       <div className="flex flex-col gap-4 md:flex-row md:justify-between">
         <div>
-          <h3 className="text-xl font-bold">{receipt.vendor}</h3>
+          <h3 className="text-xl font-semibold">{receipt.vendor}</h3>
 
           <div className="mt-2 flex flex-wrap gap-2">
-            <span className="rounded-full bg-slate-800 px-3 py-1 text-sm">
+            <span className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700">
               {receipt.category}
             </span>
 
-            <span className="rounded-full bg-green-900/40 px-3 py-1 text-sm font-semibold text-green-400">
+            <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
               ${Number(receipt.amount).toFixed(2)}
             </span>
           </div>
@@ -39,16 +39,16 @@ export default function ReceiptCard({
         <div className="flex gap-2 self-start">
           <button
             onClick={() => onEdit(receipt)}
-            className="rounded-lg bg-blue-600 px-4 py-2 font-semibold transition hover:bg-blue-700"
+            className="rounded-lg border border-gray-200 bg-white px-4 py-2 font-semibold hover:bg-gray-50"
           >
-            ✏️ Edit
+            Edit
           </button>
 
           <button
             onClick={() => onDelete(receipt)}
-            className="rounded-lg bg-red-600 px-4 py-2 font-semibold transition hover:bg-red-700"
+            className="rounded-lg bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700"
           >
-            🗑 Delete
+            Delete
           </button>
         </div>
       </div>
@@ -60,7 +60,7 @@ export default function ReceiptCard({
             alt={receipt.vendor}
             width={450}
             height={600}
-            className="rounded-xl border border-slate-700"
+            className="rounded-xl border border-gray-200"
           />
         </div>
       )}

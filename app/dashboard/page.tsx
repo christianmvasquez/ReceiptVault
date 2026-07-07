@@ -238,7 +238,7 @@ export default function Dashboard() {
     const link = document.createElement("a");
 
     link.href = url;
-    link.download = "receipt-vault-export.csv";
+    link.download = "receiptr-export.csv";
     link.click();
 
     URL.revokeObjectURL(url);
@@ -250,19 +250,19 @@ export default function Dashboard() {
   );
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
+    <main className="min-h-screen bg-white text-gray-900">
       <div className="mx-auto max-w-6xl p-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">Vaultly</h1>
-            <p className="mt-2 text-slate-400">
+            <h1 className="text-4xl font-bold tracking-tight">Receiptr</h1>
+            <p className="mt-2 text-gray-500">
               Simple receipt tracking for everyday spending.
             </p>
           </div>
 
           <button
             onClick={handleLogout}
-            className="rounded-xl bg-slate-800 px-5 py-3 font-semibold hover:bg-slate-700"
+            className="rounded-xl border border-gray-200 bg-white px-5 py-3 font-semibold text-gray-800 shadow-sm hover:bg-gray-50"
           >
             Logout
           </button>
@@ -296,20 +296,20 @@ export default function Dashboard() {
           />
         </div>
 
-        <div className="mt-8 rounded-2xl bg-slate-900 p-6">
+        <div className="mt-8 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <h2 className="text-2xl font-semibold">Recent Receipts</h2>
 
             <div className="flex flex-col gap-3 md:flex-row">
               <input
-                className="w-full rounded-xl bg-slate-950 p-3 md:w-80"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-blue-500 md:w-80"
                 placeholder="Search receipts..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
 
               <select
-                className="w-full rounded-xl bg-slate-950 p-3 md:w-48"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-blue-500 md:w-48"
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
               >
@@ -326,7 +326,7 @@ export default function Dashboard() {
 
           <div className="mt-4 space-y-3">
             {filteredReceipts.length === 0 ? (
-              <p className="text-slate-400">No receipts found.</p>
+              <p className="text-gray-500">No receipts found.</p>
             ) : (
               filteredReceipts.map((receipt) => (
                 <ReceiptCard

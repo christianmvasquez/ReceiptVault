@@ -22,22 +22,20 @@ export default function CategoryBreakdown({
   const max = sorted.length ? sorted[0][1] : 1;
 
   return (
-    <div className="rounded-2xl bg-slate-900 p-6">
-      <h2 className="text-2xl font-semibold mb-6">
-        Expenses by Category
-      </h2>
+    <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+      <h2 className="mb-6 text-2xl font-semibold">Expenses by Category</h2>
 
       <div className="space-y-5">
         {sorted.map(([category, total]) => (
           <div key={category}>
-            <div className="flex justify-between mb-2">
-              <span>{category}</span>
-              <span>${total.toFixed(2)}</span>
+            <div className="mb-2 flex justify-between text-sm">
+              <span className="font-medium">{category}</span>
+              <span className="text-gray-500">${total.toFixed(2)}</span>
             </div>
 
-            <div className="w-full rounded-full bg-slate-800 h-3">
+            <div className="h-3 w-full rounded-full bg-gray-100">
               <div
-                className="h-3 rounded-full bg-blue-500"
+                className="h-3 rounded-full bg-blue-600"
                 style={{
                   width: `${(total / max) * 100}%`,
                 }}
@@ -47,9 +45,7 @@ export default function CategoryBreakdown({
         ))}
 
         {sorted.length === 0 && (
-          <p className="text-slate-400">
-            No receipts yet.
-          </p>
+          <p className="text-gray-500">No receipts yet.</p>
         )}
       </div>
     </div>
