@@ -1,14 +1,12 @@
-<svg width="760" height="210" viewBox="0 0 760 210" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect x="8" y="8" width="744" height="194" rx="30" fill="white"/>
-  <rect x="8.5" y="8.5" width="743" height="193" rx="29.5" stroke="#E5E7EB"/>
-  <rect x="46" y="38" width="150" height="150" rx="36" fill="#6D5EF5"/>
-  <path d="M83 69C83 62.373 88.373 57 95 57H137L161 81V145L148 137L135 145L122 137L109 145L96 137L83 145V69Z" fill="white"/>
-  <path d="M137 57V78C137 79.657 138.343 81 140 81H161L137 57Z" fill="#DDD8FF"/>
-  <rect x="101" y="78" width="33" height="10" rx="5" fill="#6D5EF5"/>
-  <rect x="100" y="98" width="55" height="10" rx="5" fill="#111827"/>
-  <rect x="100" y="121" width="40" height="10" rx="5" fill="#111827"/>
-  <path d="M162 105C170 92 181 100 172 111L162 123V105Z" fill="white"/>
-  <text x="232" y="137" fill="#111827" font-family="Inter, Arial, Helvetica, sans-serif" font-size="86" font-weight="800" letter-spacing="-3">Receipt</text>
-  <text x="603" y="137" fill="#6D5EF5" font-family="Inter, Arial, Helvetica, sans-serif" font-size="86" font-weight="800" letter-spacing="-3">r</text>
-  <rect x="608" y="154" width="42" height="8" rx="4" fill="#6D5EF5"/>
+<svg width="560" height="150" viewBox="0 0 560 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="8" y="15" width="120" height="120" rx="28" fill="#6D5EF5"/>
+  <path d="M38 43C38 36.373 43.373 31 50 31H84L106 53V108L96 102L86 108L76 102L66 108L56 102L46 108L38 113V43Z" fill="white"/>
+  <path d="M84 31V50C84 51.657 85.343 53 87 53H106L84 31Z" fill="#DDD8FF"/>
+  <rect x="55" y="53" width="28" height="8" rx="4" fill="#6D5EF5"/>
+  <rect x="54" y="72" width="48" height="8" rx="4" fill="#111827"/>
+  <rect x="54" y="92" width="35" height="8" rx="4" fill="#111827"/>
+  <path d="M106 78C113 66 123 74 115 84L106 95V78Z" fill="white"/>
+  <text x="158" y="96" fill="#111827" font-family="Inter, Arial, Helvetica, sans-serif" font-size="72" font-weight="800" letter-spacing="-3.2">Receipt</text>
+  <text x="427" y="96" fill="#6D5EF5" font-family="Inter, Arial, Helvetica, sans-serif" font-size="72" font-weight="800" letter-spacing="-3.2">r</text>
+  <rect x="431" y="111" width="32" height="7" rx="3.5" fill="#6D5EF5"/>
 </svg>
