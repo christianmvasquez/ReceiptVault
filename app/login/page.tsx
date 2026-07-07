@@ -39,7 +39,7 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-white">
       <div className="w-full max-w-md rounded-2xl bg-slate-900 p-8">
-        <h1 className="text-3xl font-bold">Sign in to Receipt Vault</h1>
+        <h1 className="text-3xl font-bold">Sign in to Vaultly</h1>
 
         <form onSubmit={signIn} className="mt-8 space-y-4">
           <input

@@ -254,9 +254,9 @@ export default function Dashboard() {
       <div className="mx-auto max-w-6xl p-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold">📸 Receipt Vault</h1>
+            <h1 className="text-4xl font-bold tracking-tight">Vaultly</h1>
             <p className="mt-2 text-slate-400">
-              Track and organize your receipts.
+              Simple receipt tracking for everyday spending.
             </p>
           </div>
 
