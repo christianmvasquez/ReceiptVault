@@ -68,8 +68,55 @@ export default function Home() {
             <div className="h-3 w-3 rounded-full bg-green-400"></div>
           </div>
 
-          <div className="flex h-[420px] items-center justify-center text-gray-400 text-xl">
-            Dashboard Preview Coming Soon
+          <div className="grid min-h-[420px] gap-5 p-6 md:grid-cols-[1.2fr_0.8fr]">
+            <div className="rounded-2xl bg-white p-5 shadow-sm">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold">Recent Receipts</h3>
+                <span className="rounded-full bg-violet-100 px-3 py-1 text-sm font-semibold text-violet-700">
+                  AI filled
+                </span>
+              </div>
+
+              <div className="mt-5 space-y-3">
+                {[
+                  ["Whole Foods Market", "Meals", "$87.65"],
+                  ["Shell", "Fuel", "$42.31"],
+                  ["Amazon Business", "Supplies", "$129.99"],
+                  ["Delta Air Lines", "Travel", "$416.20"],
+                ].map(([vendor, category, amount]) => (
+                  <div
+                    key={vendor}
+                    className="flex items-center justify-between rounded-xl bg-gray-50 p-4"
+                  >
+                    <div>
+                      <p className="font-semibold">{vendor}</p>
+                      <p className="text-sm text-gray-500">{category}</p>
+                    </div>
+                    <p className="font-bold">{amount}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-2xl bg-white p-5 shadow-sm">
+              <h3 className="text-xl font-bold">Summary</h3>
+              <div className="mt-5 grid gap-4">
+                <div className="rounded-xl bg-gray-50 p-4">
+                  <p className="text-sm text-gray-500">Total Spending</p>
+                  <p className="mt-1 text-3xl font-bold">$676.15</p>
+                </div>
+                <div className="rounded-xl bg-gray-50 p-4">
+                  <p className="text-sm text-gray-500">Top Category</p>
+                  <p className="mt-1 text-3xl font-bold">Travel</p>
+                </div>
+                <Link
+                  href="/demo"
+                  className="rounded-xl bg-gray-900 p-3 text-center font-semibold text-white hover:bg-gray-800"
+                >
+                  Open Demo
+                </Link>
+              </div>
+            </div>
           </div>
 
         </div>

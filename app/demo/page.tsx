@@ -1,95 +1,288 @@
+"use client";
+
+import Link from "next/link";
+import { useMemo, useState } from "react";
+
+const sampleReceipts = [
+  {
+    id: "1",
+    vendor: "Whole Foods Market",
+    amount: 87.65,
+    category: "Meals",
+    date: "Jul 7",
+  },
+  {
+    id: "2",
+    vendor: "Shell",
+    amount: 42.31,
+    category: "Fuel",
+    date: "Jul 6",
+  },
+  {
+    id: "3",
+    vendor: "Amazon Business",
+    amount: 129.99,
+    category: "Supplies",
+    date: "Jul 5",
+  },
+  {
+    id: "4",
+    vendor: "Delta Air Lines",
+    amount: 416.2,
+    category: "Travel",
+    date: "Jul 4",
+  },
+  {
+    id: "5",
+    vendor: "Apple Store",
+    amount: 219.0,
+    category: "Equipment",
+    date: "Jul 3",
+  },
+  {
+    id: "6",
+    vendor: "Starbucks",
+    amount: 12.48,
+    category: "Meals",
+    date: "Jul 2",
+  },
+];
+
+const categories = ["All", "Meals", "Fuel", "Supplies", "Travel", "Equipment"];
+
 export default function DemoPage() {
-  const receipts = [
-    ["Whole Foods Market", "Groceries", "$87.65"],
-    ["Uber", "Transportation", "$23.14"],
-    ["Amazon", "Shopping", "$129.99"],
-    ["Starbucks", "Dining", "$6.75"],
-    ["Shell", "Gas", "$42.31"],
-  ];
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+  const [scanState, setScanState] = useState<"idle" | "scanning" | "done">(
+    "idle"
+  );
+
+  const filteredReceipts = useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    return sampleReceipts.filter((receipt) => {
+      const matchesCategory =
+        category === "All" || receipt.category === category;
+      const matchesSearch =
+        !query ||
+        receipt.vendor.toLowerCase().includes(query) ||
+        receipt.category.toLowerCase().includes(query) ||
+        String(receipt.amount).includes(query);
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [category, search]);
+
+  const total = filteredReceipts.reduce(
+    (sum, receipt) => sum + receipt.amount,
+    0
+  );
+  const average = filteredReceipts.length ? total / filteredReceipts.length : 0;
+  const largest = filteredReceipts.length
+    ? Math.max(...filteredReceipts.map((receipt) => receipt.amount))
+    : 0;
+
+  const categoryTotals = categories
+    .filter((item) => item !== "All")
+    .map((item) => ({
+      category: item,
+      total: filteredReceipts
+        .filter((receipt) => receipt.category === item)
+        .reduce((sum, receipt) => sum + receipt.amount, 0),
+    }))
+    .filter((item) => item.total > 0);
+
+  const maxCategory = Math.max(
+    ...categoryTotals.map((item) => item.total),
+    1
+  );
+
+  function runDemoScan() {
+    setScanState("scanning");
+    window.setTimeout(() => setScanState("done"), 900);
+  }
 
   return (
-    <main className="min-h-screen bg-gray-50 p-8 text-gray-900">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-8 flex items-center justify-between">
+    <main className="min-h-screen bg-gray-50 px-6 py-8 text-gray-900">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between">
+        <Link href="/" className="text-3xl font-bold tracking-tight">
+          Receiptr
+        </Link>
+
+        <div className="flex items-center gap-3">
+          <Link
+            href="/login"
+            className="rounded-xl border border-gray-300 px-5 py-3 font-semibold hover:bg-white"
+          >
+            Sign In
+          </Link>
+
+          <Link
+            href="/signup"
+            className="rounded-xl bg-[#6D5EF5] px-5 py-3 font-semibold text-white hover:bg-[#5B4CF0]"
+          >
+            Subscribe Now
+          </Link>
+        </div>
+      </nav>
+
+      <section className="mx-auto mt-10 max-w-7xl">
+        <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div>
-            <h1 className="text-4xl font-bold">Receiptr Demo</h1>
-            <p className="mt-2 text-gray-500">
-              Explore how Receiptr organizes receipts and tracks expenses.
+            <p className="text-sm font-semibold uppercase tracking-wide text-violet-600">
+              Interactive demo
+            </p>
+            <h1 className="mt-3 text-5xl font-extrabold tracking-tight">
+              See the receipt dashboard in action.
+            </h1>
+            <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
+              Search sample receipts, review category spending, and preview how
+              AI fills receipt fields after upload.
             </p>
           </div>
-
-          <a
-            href="/signup"
-            className="rounded-xl bg-[#6D5EF5] px-6 py-3 font-semibold text-white hover:bg-[#5B4CF0]"
-          >
-            Subscribe to Unlock
-          </a>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-4">
-          <div className="rounded-2xl border bg-white p-6 shadow-sm">
-            <p className="text-sm text-gray-500">Total Spent</p>
-            <h2 className="mt-2 text-3xl font-bold">$2,567.89</h2>
-          </div>
-
-          <div className="rounded-2xl border bg-white p-6 shadow-sm">
-            <p className="text-sm text-gray-500">Receipts</p>
-            <h2 className="mt-2 text-3xl font-bold">48</h2>
-          </div>
-
-          <div className="rounded-2xl border bg-white p-6 shadow-sm">
-            <p className="text-sm text-gray-500">Categories</p>
-            <h2 className="mt-2 text-3xl font-bold">12</h2>
-          </div>
-
-          <div className="rounded-2xl border bg-white p-6 shadow-sm">
-            <p className="text-sm text-gray-500">Avg. Per Day</p>
-            <h2 className="mt-2 text-3xl font-bold">$82.84</h2>
-          </div>
+        <div className="mt-8 grid gap-4 md:grid-cols-4">
+          {[
+            ["Total Spending", `$${total.toFixed(2)}`],
+            ["Receipts", String(filteredReceipts.length)],
+            ["Average", `$${average.toFixed(2)}`],
+            ["Largest", `$${largest.toFixed(2)}`],
+          ].map(([label, value]) => (
+            <div
+              key={label}
+              className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
+            >
+              <p className="text-sm text-gray-500">{label}</p>
+              <p className="mt-2 text-3xl font-bold">{value}</p>
+            </div>
+          ))}
         </div>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          <div className="rounded-2xl border bg-white p-6 shadow-sm md:col-span-2">
-            <h3 className="text-xl font-bold">Recent Receipts</h3>
+        <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <h2 className="text-2xl font-bold">Recent Receipts</h2>
 
-            <div className="mt-6 space-y-4">
-              {receipts.map(([store, category, amount]) => (
+              <div className="flex flex-col gap-3 md:flex-row">
+                <input
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Search receipts..."
+                  className="rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-violet-500 md:w-72"
+                />
+
+                <select
+                  value={category}
+                  onChange={(event) => setCategory(event.target.value)}
+                  className="rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-violet-500 md:w-44"
+                >
+                  {categories.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-5 divide-y divide-gray-100">
+              {filteredReceipts.map((receipt) => (
                 <div
-                  key={store}
-                  className="flex items-center justify-between rounded-xl border bg-gray-50 p-4"
+                  key={receipt.id}
+                  className="grid grid-cols-[1fr_auto] gap-4 py-4"
                 >
                   <div>
-                    <p className="font-semibold">{store}</p>
-                    <p className="text-sm text-gray-500">{category}</p>
+                    <p className="font-semibold">{receipt.vendor}</p>
+                    <p className="mt-1 text-sm text-gray-500">
+                      {receipt.category} · {receipt.date}
+                    </p>
                   </div>
-                  <p className="font-bold">{amount}</p>
+
+                  <p className="font-bold">${receipt.amount.toFixed(2)}</p>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
-          <div className="rounded-2xl border bg-white p-6 shadow-sm">
-            <h3 className="text-xl font-bold">Premium Actions</h3>
+          <aside className="space-y-6">
+            <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+              <h2 className="text-2xl font-bold">AI Scan Preview</h2>
+              <p className="mt-2 text-gray-500">
+                Watch how an uploaded receipt can fill the form.
+              </p>
 
-            <div className="mt-6 space-y-3">
-              {["Upload Receipt", "AI Scan", "Export CSV", "Create Report"].map(
-                (item) => (
-                  <button
-                    key={item}
-                    className="w-full rounded-xl border bg-gray-50 p-4 text-left font-semibold text-gray-400"
-                  >
-                    {item}
-                  </button>
-                )
-              )}
-            </div>
+              <div className="mt-5 rounded-2xl border border-dashed border-gray-300 bg-gray-50 p-5">
+                <p className="font-semibold">
+                  {scanState === "idle" && "receipt-photo.jpg"}
+                  {scanState === "scanning" && "Reading receipt..."}
+                  {scanState === "done" && "AI details found"}
+                </p>
+                <div className="mt-4 grid gap-3">
+                  <div className="rounded-xl bg-white p-3">
+                    Vendor:{" "}
+                    <span className="font-semibold">
+                      {scanState === "done" ? "Whole Foods Market" : "-"}
+                    </span>
+                  </div>
+                  <div className="rounded-xl bg-white p-3">
+                    Amount:{" "}
+                    <span className="font-semibold">
+                      {scanState === "done" ? "$87.65" : "-"}
+                    </span>
+                  </div>
+                  <div className="rounded-xl bg-white p-3">
+                    Category:{" "}
+                    <span className="font-semibold">
+                      {scanState === "done" ? "Meals" : "-"}
+                    </span>
+                  </div>
+                </div>
+              </div>
 
-            <p className="mt-5 text-sm text-gray-500">
-              Subscribe to unlock uploads, AI scanning, exports, and saved data.
-            </p>
-          </div>
+              <button
+                type="button"
+                onClick={runDemoScan}
+                className="mt-5 w-full rounded-xl bg-gray-900 p-3 font-semibold text-white hover:bg-gray-800"
+              >
+                {scanState === "scanning" ? "Scanning..." : "Run Demo Scan"}
+              </button>
+            </section>
+
+            <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+              <h2 className="text-2xl font-bold">Expenses by Category</h2>
+
+              <div className="mt-5 space-y-4">
+                {categoryTotals.map((item) => (
+                  <div key={item.category}>
+                    <div className="mb-2 flex justify-between text-sm">
+                      <span className="font-semibold">{item.category}</span>
+                      <span className="text-gray-500">
+                        ${item.total.toFixed(2)}
+                      </span>
+                    </div>
+                    <div className="h-3 rounded-full bg-gray-100">
+                      <div
+                        className="h-3 rounded-full bg-[#6D5EF5]"
+                        style={{
+                          width: `${(item.total / maxCategory) * 100}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <Link
+              href="/signup"
+              className="block rounded-2xl bg-[#6D5EF5] p-5 text-center font-semibold text-white hover:bg-[#5B4CF0]"
+            >
+              Subscribe to upload real receipts
+            </Link>
+          </aside>
         </div>
-      </div>
+      </section>
     </main>
   );
 }
