@@ -22,10 +22,11 @@ export async function POST() {
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
-    console.error("Stripe checkout error:", error);
-    return NextResponse.json(
-      { error: "Unable to create checkout session" },
-      { status: 500 }
-    );
+    const message =
+      error instanceof Error ? error.message : "Unknown Stripe error";
+
+    console.error("Stripe checkout error:", message);
+
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
