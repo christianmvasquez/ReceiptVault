@@ -408,19 +408,19 @@ export default function Dashboard() {
         </div>
 
         <div className="mt-8 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <h2 className="text-2xl font-semibold">Recent Receipts</h2>
 
-            <div className="flex flex-col gap-3 md:flex-row">
+            <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row lg:max-w-md">
               <input
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-violet-500 md:w-80"
+                className="w-full min-w-0 rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-violet-500 sm:flex-1"
                 placeholder="Search receipts..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
 
               <select
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-violet-500 md:w-48"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-violet-500 sm:w-40 sm:shrink-0"
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
               >
