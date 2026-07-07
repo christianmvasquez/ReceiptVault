@@ -51,6 +51,13 @@ const sampleReceipts = [
 
 const categories = ["All", "Meals", "Fuel", "Supplies", "Travel", "Equipment"];
 
+function formatCurrency(value: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(value);
+}
+
 export default function DemoPage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
@@ -74,14 +81,10 @@ export default function DemoPage() {
     });
   }, [category, search]);
 
-  const total = filteredReceipts.reduce(
+  const totalWriteOffs = filteredReceipts.reduce(
     (sum, receipt) => sum + receipt.amount,
     0
   );
-  const average = filteredReceipts.length ? total / filteredReceipts.length : 0;
-  const largest = filteredReceipts.length
-    ? Math.max(...filteredReceipts.map((receipt) => receipt.amount))
-    : 0;
 
   const categoryTotals = categories
     .filter((item) => item !== "All")
@@ -97,6 +100,7 @@ export default function DemoPage() {
     ...categoryTotals.map((item) => item.total),
     1
   );
+  const topCategory = [...categoryTotals].sort((a, b) => b.total - a.total)[0];
 
   function runDemoScan() {
     setScanState("scanning");
@@ -104,8 +108,8 @@ export default function DemoPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 px-6 py-8 text-gray-900">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between">
+    <main className="min-h-screen bg-white px-6 py-8 text-gray-900">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between">
         <Link href="/" aria-label="Receiptr home">
           <BrandLogo className="h-14 w-auto" />
         </Link>
@@ -127,40 +131,107 @@ export default function DemoPage() {
         </div>
       </nav>
 
-      <section className="mx-auto mt-10 max-w-7xl">
-        <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+      <section className="mx-auto mt-10 max-w-6xl">
+        <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-start">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-wide text-violet-600">
-              Interactive demo
-            </p>
-            <h1 className="mt-3 text-5xl font-extrabold tracking-tight">
-              See the receipt dashboard in action.
-            </h1>
-            <p className="mt-4 max-w-3xl text-lg leading-8 text-gray-600">
-              Search sample receipts, review category spending, and preview how
-              AI fills receipt fields after upload.
+            <p className="mt-2 text-gray-500">
+              Simple receipt tracking for everyday spending.
             </p>
           </div>
         </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-4">
-          {[
-            ["Total Spending", `$${total.toFixed(2)}`],
-            ["Receipts", String(filteredReceipts.length)],
-            ["Average", `$${average.toFixed(2)}`],
-            ["Largest", `$${largest.toFixed(2)}`],
-          ].map(([label, value]) => (
-            <div
-              key={label}
-              className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
-            >
-              <p className="text-sm text-gray-500">{label}</p>
-              <p className="mt-2 text-3xl font-bold">{value}</p>
-            </div>
-          ))}
+          <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+            <p className="text-sm font-medium text-gray-500">
+              Tracked Write-Offs
+            </p>
+            <p className="mt-2 text-3xl font-bold">
+              {formatCurrency(totalWriteOffs)}
+            </p>
+            <p className="mt-2 text-sm text-gray-500">
+              Potential deductions logged
+            </p>
+          </div>
+
+          <div className="rounded-3xl bg-[#6D5EF5] p-5 text-white shadow-sm">
+            <p className="text-sm font-medium text-violet-100">
+              Possible Taxable Income Reduction
+            </p>
+            <p className="mt-2 text-3xl font-bold">
+              {formatCurrency(totalWriteOffs)}
+            </p>
+            <p className="mt-2 text-sm text-violet-100">
+              If expenses qualify as deductible
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+            <p className="text-sm font-medium text-gray-500">Receipts Saved</p>
+            <p className="mt-2 text-3xl font-bold">
+              {filteredReceipts.length}
+            </p>
+            <p className="mt-2 text-sm text-gray-500">Ready for tax time</p>
+          </div>
+
+          <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+            <p className="text-sm font-medium text-gray-500">Top Write-Off</p>
+            <p className="mt-2 text-3xl font-bold">
+              {topCategory?.category || "None"}
+            </p>
+            <p className="mt-2 text-sm text-gray-500">
+              {topCategory ? formatCurrency(topCategory.total) : "No receipts"}
+            </p>
+          </div>
         </div>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+        <section className="mt-8 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <h2 className="text-2xl font-semibold">
+                Write-Offs by Category
+              </h2>
+              <p className="mt-2 text-gray-500">
+                Track possible business deductions by category before tax time.
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-violet-50 px-5 py-4 text-violet-900">
+              <p className="text-sm font-semibold">Potential Deductions</p>
+              <p className="mt-1 text-2xl font-bold">
+                {formatCurrency(totalWriteOffs)}
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-5">
+            {categoryTotals.map((item) => (
+              <div key={item.category}>
+                <div className="mb-2 flex justify-between text-sm">
+                  <span className="font-medium">{item.category}</span>
+                  <span className="text-gray-500">
+                    {formatCurrency(item.total)}
+                  </span>
+                </div>
+                <div className="h-3 rounded-full bg-gray-100">
+                  <div
+                    className="h-3 rounded-full bg-[#6D5EF5]"
+                    style={{
+                      width: `${(item.total / maxCategory) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-6 text-sm text-gray-400">
+            Write-offs usually reduce taxable income, not taxes
+            dollar-for-dollar. Eligibility depends on business use and tax
+            rules.
+          </p>
+        </section>
+
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
           <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <h2 className="text-2xl font-bold">Recent Receipts</h2>
@@ -200,7 +271,7 @@ export default function DemoPage() {
                     </p>
                   </div>
 
-                  <p className="font-bold">${receipt.amount.toFixed(2)}</p>
+                  <p className="font-bold">{formatCurrency(receipt.amount)}</p>
                 </div>
               ))}
             </div>
@@ -244,35 +315,10 @@ export default function DemoPage() {
               <button
                 type="button"
                 onClick={runDemoScan}
-                className="mt-5 w-full rounded-xl bg-gray-900 p-3 font-semibold text-white hover:bg-gray-800"
+                className="mt-5 w-full rounded-xl bg-[#6D5EF5] p-3 font-semibold text-white hover:bg-[#5B4CF0]"
               >
                 {scanState === "scanning" ? "Scanning..." : "Run Demo Scan"}
               </button>
-            </section>
-
-            <section className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="text-2xl font-bold">Expenses by Category</h2>
-
-              <div className="mt-5 space-y-4">
-                {categoryTotals.map((item) => (
-                  <div key={item.category}>
-                    <div className="mb-2 flex justify-between text-sm">
-                      <span className="font-semibold">{item.category}</span>
-                      <span className="text-gray-500">
-                        ${item.total.toFixed(2)}
-                      </span>
-                    </div>
-                    <div className="h-3 rounded-full bg-gray-100">
-                      <div
-                        className="h-3 rounded-full bg-[#6D5EF5]"
-                        style={{
-                          width: `${(item.total / maxCategory) * 100}%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
             </section>
 
             <Link
