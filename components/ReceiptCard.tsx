@@ -30,7 +30,7 @@ export default function ReceiptCard({
               {receipt.category}
             </span>
 
-            <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
+            <span className="rounded-full bg-violet-50 px-3 py-1 text-sm font-semibold text-violet-700">
               ${Number(receipt.amount).toFixed(2)}
             </span>
           </div>
@@ -39,7 +39,7 @@ export default function ReceiptCard({
         <div className="flex gap-2 self-start">
           <button
             onClick={() => onEdit(receipt)}
-            className="rounded-lg border border-gray-200 bg-white px-4 py-2 font-semibold hover:bg-gray-50"
+            className="rounded-lg border border-violet-200 bg-white px-4 py-2 font-semibold text-violet-700 hover:bg-violet-50"
           >
             Edit
           </button>

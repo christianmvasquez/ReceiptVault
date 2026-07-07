@@ -35,7 +35,7 @@ export default function CategoryBreakdown({
 
             <div className="h-3 w-full rounded-full bg-gray-100">
               <div
-                className="h-3 rounded-full bg-blue-600"
+                className="h-3 rounded-full bg-[#6D5EF5]"
                 style={{
                   width: `${(total / max) * 100}%`,
                 }}

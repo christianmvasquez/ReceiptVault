@@ -55,7 +55,7 @@ export default function ReceiptForm({
       )}
 
       <input
-        className="mt-4 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-blue-500"
+        className="mt-4 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-violet-500"
         placeholder="Vendor"
         value={vendor}
         onChange={(e) => setVendor(e.target.value)}
@@ -63,7 +63,7 @@ export default function ReceiptForm({
       />
 
       <input
-        className="mt-4 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-blue-500"
+        className="mt-4 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-violet-500"
         placeholder="Amount"
         type="number"
         value={amount}
@@ -72,7 +72,7 @@ export default function ReceiptForm({
       />
 
       <select
-        className="mt-4 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-blue-500"
+        className="mt-4 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-violet-500"
         value={category}
         onChange={(e) => setCategory(e.target.value)}
         required
@@ -88,7 +88,7 @@ export default function ReceiptForm({
 
       <button
         disabled={isScanning}
-        className="mt-6 w-full rounded-xl bg-blue-600 p-3 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-70"
+        className="mt-6 w-full rounded-xl bg-[#6D5EF5] p-3 font-semibold text-white hover:bg-[#5B4CF0] disabled:cursor-not-allowed disabled:opacity-70"
       >
         {isScanning
           ? "Scanning Receipt..."

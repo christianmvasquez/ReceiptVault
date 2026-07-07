@@ -370,7 +370,7 @@ export default function Dashboard() {
 
           <button
             onClick={handleLogout}
-            className="rounded-xl border border-gray-200 bg-white px-5 py-3 font-semibold text-gray-800 shadow-sm hover:bg-gray-50"
+            className="rounded-xl bg-[#6D5EF5] px-5 py-3 font-semibold text-white shadow-sm hover:bg-[#5B4CF0]"
           >
             Logout
           </button>
@@ -412,14 +412,14 @@ export default function Dashboard() {
 
             <div className="flex flex-col gap-3 md:flex-row">
               <input
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-blue-500 md:w-80"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-violet-500 md:w-80"
                 placeholder="Search receipts..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
 
               <select
-                className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-blue-500 md:w-48"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-violet-500 md:w-48"
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
               >

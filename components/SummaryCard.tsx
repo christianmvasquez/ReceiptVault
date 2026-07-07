@@ -21,7 +21,7 @@ export default function SummaryCard({
 
       <button
         onClick={exportCSV}
-        className="mt-8 w-full rounded-xl bg-gray-900 p-3 font-semibold text-white hover:bg-gray-800"
+        className="mt-8 w-full rounded-xl bg-[#6D5EF5] p-3 font-semibold text-white hover:bg-[#5B4CF0]"
       >
         Export CSV
       </button>
