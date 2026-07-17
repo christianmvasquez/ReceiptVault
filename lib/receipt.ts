@@ -3,7 +3,8 @@ import { supabase } from "./supabase";
 export async function addReceipt(
   vendor: string,
   amount: number,
-  category: string
+  category: string,
+  notes = ""
 ) {
   const { data, error } = await supabase
     .from("receipts")
@@ -12,6 +13,7 @@ export async function addReceipt(
         vendor,
         amount,
         category,
+        notes,
       },
     ])
     .select();

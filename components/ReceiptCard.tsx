@@ -5,6 +5,7 @@ type Receipt = {
   vendor: string;
   amount: number;
   category: string;
+  notes?: string | null;
   image_url?: string;
 };
 
@@ -34,6 +35,12 @@ export default function ReceiptCard({
               ${Number(receipt.amount).toFixed(2)}
             </span>
           </div>
+
+          {receipt.notes && (
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-600">
+              {receipt.notes}
+            </p>
+          )}
         </div>
 
         <div className="flex gap-2 self-start">

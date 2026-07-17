@@ -2,6 +2,7 @@ type ReceiptFormProps = {
   vendor: string;
   amount: string;
   category: string;
+  notes: string;
   file: File | null;
   isEditing: boolean;
   isScanning: boolean;
@@ -9,6 +10,7 @@ type ReceiptFormProps = {
   setVendor: (value: string) => void;
   setAmount: (value: string) => void;
   setCategory: (value: string) => void;
+  setNotes: (value: string) => void;
   handleFileChange: (file: File | null) => void;
   handleSubmit: (e: React.FormEvent) => void;
   cancelEdit: () => void;
@@ -18,6 +20,7 @@ export default function ReceiptForm({
   vendor,
   amount,
   category,
+  notes,
   file,
   isEditing,
   isScanning,
@@ -25,6 +28,7 @@ export default function ReceiptForm({
   setVendor,
   setAmount,
   setCategory,
+  setNotes,
   handleFileChange,
   handleSubmit,
   cancelEdit,
@@ -85,6 +89,13 @@ export default function ReceiptForm({
         <option value="Fuel">Fuel</option>
         <option value="Other">Other</option>
       </select>
+
+      <textarea
+        className="mt-4 min-h-24 w-full resize-y rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-violet-500"
+        placeholder="Notes, business purpose, or CPA context"
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+      />
 
       <button
         disabled={isScanning}

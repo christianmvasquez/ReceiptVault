@@ -15,6 +15,7 @@ type Receipt = {
   vendor: string;
   amount: number;
   category: string;
+  notes?: string | null;
   image_url?: string;
   user_id?: string;
 };
@@ -30,6 +31,7 @@ export default function Dashboard() {
   const [vendor, setVendor] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
+  const [notes, setNotes] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [receipts, setReceipts] = useState<Receipt[]>([]);
   const [search, setSearch] = useState("");
@@ -84,6 +86,7 @@ export default function Dashboard() {
     setVendor(receipt.vendor);
     setAmount(String(receipt.amount));
     setCategory(receipt.category);
+    setNotes(receipt.notes || "");
     setFile(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -93,6 +96,7 @@ export default function Dashboard() {
     setVendor("");
     setAmount("");
     setCategory("");
+    setNotes("");
     setFile(null);
     setScanMessage("");
   }
@@ -254,6 +258,7 @@ export default function Dashboard() {
           vendor,
           amount: Number(amount),
           category,
+          notes,
         })
         .eq("id", editingReceipt.id)
         .eq("user_id", user.id);
@@ -275,6 +280,7 @@ export default function Dashboard() {
         vendor,
         amount: Number(amount),
         category,
+        notes,
         image_url: imageUrl,
         user_id: user.id,
       },
@@ -288,6 +294,7 @@ export default function Dashboard() {
     setVendor("");
     setAmount("");
     setCategory("");
+    setNotes("");
     setFile(null);
 
     await loadReceipts();
@@ -299,6 +306,7 @@ export default function Dashboard() {
     const matchesSearch =
       receipt.vendor.toLowerCase().includes(searchText) ||
       receipt.category.toLowerCase().includes(searchText) ||
+      (receipt.notes || "").toLowerCase().includes(searchText) ||
       String(receipt.amount).includes(searchText);
 
     const matchesCategory =
@@ -313,12 +321,13 @@ export default function Dashboard() {
       return;
     }
 
-    const headers = ["Vendor", "Amount", "Category", "Image URL"];
+    const headers = ["Vendor", "Amount", "Category", "Notes", "Image URL"];
 
     const rows = filteredReceipts.map((receipt) => [
       receipt.vendor,
       String(receipt.amount),
       receipt.category,
+      receipt.notes || "",
       receipt.image_url || "",
     ]);
 
@@ -388,6 +397,7 @@ export default function Dashboard() {
             vendor={vendor}
             amount={amount}
             category={category}
+            notes={notes}
             file={file}
             isEditing={!!editingReceipt}
             isScanning={isScanning}
@@ -395,6 +405,7 @@ export default function Dashboard() {
             setVendor={setVendor}
             setAmount={setAmount}
             setCategory={setCategory}
+            setNotes={setNotes}
             handleFileChange={handleFileChange}
             handleSubmit={handleSubmit}
             cancelEdit={cancelEdit}
