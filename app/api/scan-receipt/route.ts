@@ -1,11 +1,29 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 const categories = ["Meals", "Travel", "Supplies", "Equipment", "Fuel", "Other"];
+
+function getScanErrorMessage(error: unknown) {
+  if (error instanceof OpenAI.APIError) {
+    if (error.status === 401) {
+      return "OpenAI rejected the API key. Check OPENAI_API_KEY in Vercel.";
+    }
+
+    if (error.status === 403) {
+      return "This OpenAI API key does not have access to the scan model.";
+    }
+
+    if (error.status === 429) {
+      return "OpenAI billing or rate limit blocked the scan. Check your API balance and limits.";
+    }
+
+    if (error.status === 400) {
+      return "OpenAI could not read this image. Try a clearer JPG or PNG receipt photo.";
+    }
+  }
+
+  return "Failed to scan receipt.";
+}
 
 export async function POST(req: Request) {
   try {
@@ -24,6 +42,10 @@ export async function POST(req: Request) {
         { status: 500 }
       );
     }
+
+    const client = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
 
     const response = await client.chat.completions.create({
       model: "gpt-4.1-mini",
@@ -66,7 +88,7 @@ export async function POST(req: Request) {
     console.error("========================");
     return NextResponse.json(
       {
-        error: "Failed to scan receipt.",
+        error: getScanErrorMessage(error),
       },
       { status: 500 }
     );
