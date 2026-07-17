@@ -18,6 +18,7 @@ type Receipt = {
   notes?: string | null;
   image_url?: string;
   user_id?: string;
+  created_at?: string;
 };
 
 function hasActiveSubscription(metadata: Record<string, unknown>) {
@@ -40,6 +41,7 @@ export default function Dashboard() {
   const [editingReceipt, setEditingReceipt] = useState<Receipt | null>(null);
   const [isCheckingAccess, setIsCheckingAccess] = useState(true);
   const [isScanning, setIsScanning] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const [scanMessage, setScanMessage] = useState("");
 
   async function handleLogout() {
@@ -321,40 +323,45 @@ export default function Dashboard() {
     return matchesSearch && matchesCategory;
   });
 
-  function exportCSV() {
+  async function exportPackage() {
     if (filteredReceipts.length === 0) {
       alert("No receipts to export.");
       return;
     }
 
-    const headers = ["Vendor", "Amount", "Category", "Notes", "Image URL"];
+    setIsExporting(true);
 
-    const rows = filteredReceipts.map((receipt) => [
-      receipt.vendor,
-      String(receipt.amount),
-      receipt.category,
-      receipt.notes || "",
-      receipt.image_url || "",
-    ]);
+    try {
+      const response = await fetch("/api/export-receipts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          receiptIds: filteredReceipts.map((receipt) => receipt.id),
+        }),
+      });
 
-    const csvContent = [headers, ...rows]
-      .map((row) =>
-        row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(",")
-      )
-      .join("\n");
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        alert(data.error || "Could not export receipts.");
+        return;
+      }
 
-    const blob = new Blob([csvContent], {
-      type: "text/csv;charset=utf-8;",
-    });
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
 
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
+      link.href = url;
+      link.download = `receiptr-export-${new Date()
+        .toISOString()
+        .slice(0, 10)}.zip`;
+      link.click();
 
-    link.href = url;
-    link.download = "receiptr-export.csv";
-    link.click();
-
-    URL.revokeObjectURL(url);
+      URL.revokeObjectURL(url);
+    } finally {
+      setIsExporting(false);
+    }
   }
 
   const totalSpending = filteredReceipts.reduce(
@@ -421,7 +428,8 @@ export default function Dashboard() {
           <SummaryCard
             receiptCount={filteredReceipts.length}
             totalSpending={totalSpending}
-            exportCSV={exportCSV}
+            isExporting={isExporting}
+            exportPackage={exportPackage}
           />
         </div>
 
