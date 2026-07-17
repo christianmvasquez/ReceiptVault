@@ -33,6 +33,7 @@ export default function Dashboard() {
   const [category, setCategory] = useState("");
   const [notes, setNotes] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [receiptPreviewUrl, setReceiptPreviewUrl] = useState("");
   const [receipts, setReceipts] = useState<Receipt[]>([]);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
@@ -88,6 +89,7 @@ export default function Dashboard() {
     setCategory(receipt.category);
     setNotes(receipt.notes || "");
     setFile(null);
+    setReceiptPreviewUrl("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -98,6 +100,7 @@ export default function Dashboard() {
     setCategory("");
     setNotes("");
     setFile(null);
+    setReceiptPreviewUrl("");
     setScanMessage("");
   }
 
@@ -141,6 +144,7 @@ export default function Dashboard() {
 
   async function handleFileChange(selectedFile: File | null) {
     setFile(selectedFile);
+    setReceiptPreviewUrl("");
     setScanMessage("");
 
     if (!selectedFile) return;
@@ -150,6 +154,7 @@ export default function Dashboard() {
 
     try {
       const imageUrl = await readFileAsJpegDataUrl(selectedFile);
+      setReceiptPreviewUrl(imageUrl);
       const response = await fetch("/api/scan-receipt", {
         method: "POST",
         headers: {
@@ -296,6 +301,7 @@ export default function Dashboard() {
     setCategory("");
     setNotes("");
     setFile(null);
+    setReceiptPreviewUrl("");
 
     await loadReceipts();
   }
@@ -399,6 +405,7 @@ export default function Dashboard() {
             category={category}
             notes={notes}
             file={file}
+            receiptPreviewUrl={receiptPreviewUrl}
             isEditing={!!editingReceipt}
             isScanning={isScanning}
             scanMessage={scanMessage}

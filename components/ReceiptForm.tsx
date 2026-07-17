@@ -1,9 +1,12 @@
+import Image from "next/image";
+
 type ReceiptFormProps = {
   vendor: string;
   amount: string;
   category: string;
   notes: string;
   file: File | null;
+  receiptPreviewUrl: string;
   isEditing: boolean;
   isScanning: boolean;
   scanMessage: string;
@@ -22,6 +25,7 @@ export default function ReceiptForm({
   category,
   notes,
   file,
+  receiptPreviewUrl,
   isEditing,
   isScanning,
   scanMessage,
@@ -55,6 +59,19 @@ export default function ReceiptForm({
         <div className="mt-3 rounded-xl bg-gray-50 p-3 text-sm text-gray-600">
           <p className="font-semibold text-gray-800">{file.name}</p>
           <p>{isScanning ? "Reading receipt with AI..." : scanMessage}</p>
+        </div>
+      )}
+
+      {!isEditing && receiptPreviewUrl && (
+        <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
+          <Image
+            src={receiptPreviewUrl}
+            alt="Receipt preview"
+            width={450}
+            height={600}
+            unoptimized
+            className="max-h-96 w-full object-contain"
+          />
         </div>
       )}
 
