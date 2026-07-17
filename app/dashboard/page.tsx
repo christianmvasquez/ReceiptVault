@@ -41,7 +41,6 @@ export default function Dashboard() {
   const [editingReceipt, setEditingReceipt] = useState<Receipt | null>(null);
   const [isCheckingAccess, setIsCheckingAccess] = useState(true);
   const [isScanning, setIsScanning] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
   const [scanMessage, setScanMessage] = useState("");
 
   async function handleLogout() {
@@ -323,45 +322,69 @@ export default function Dashboard() {
     return matchesSearch && matchesCategory;
   });
 
-  async function exportPackage() {
+  function exportCSV() {
     if (filteredReceipts.length === 0) {
       alert("No receipts to export.");
       return;
     }
 
-    setIsExporting(true);
+    const categoryTotals = filteredReceipts.reduce<Record<string, number>>(
+      (totals, receipt) => {
+        totals[receipt.category] =
+          (totals[receipt.category] || 0) + Number(receipt.amount);
+        return totals;
+      },
+      {}
+    );
 
-    try {
-      const response = await fetch("/api/export-receipts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          receiptIds: filteredReceipts.map((receipt) => receipt.id),
-        }),
-      });
+    const totalPossibleDeductions = filteredReceipts.reduce(
+      (sum, receipt) => sum + Number(receipt.amount),
+      0
+    );
 
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        alert(data.error || "Could not export receipts.");
-        return;
-      }
+    const rows = [
+      ["Receipt Export"],
+      ["Generated", new Date().toLocaleDateString()],
+      ["Total Possible Taxable Deductions", totalPossibleDeductions.toFixed(2)],
+      [],
+      ["Totals By Category"],
+      ["Category", "Total"],
+      ...Object.entries(categoryTotals)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([category, total]) => [category, total.toFixed(2)]),
+      [],
+      ["Receipt Details"],
+      ["Vendor", "Price", "Category", "Notes", "Picture Link", "Created At"],
+      ...filteredReceipts.map((receipt) => [
+        receipt.vendor,
+        Number(receipt.amount).toFixed(2),
+        receipt.category,
+        receipt.notes || "",
+        receipt.image_url || "",
+        receipt.created_at || "",
+      ]),
+    ];
 
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
+    const csvContent = rows
+      .map((row) =>
+        row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(",")
+      )
+      .join("\n");
 
-      link.href = url;
-      link.download = `receiptr-export-${new Date()
-        .toISOString()
-        .slice(0, 10)}.zip`;
-      link.click();
+    const blob = new Blob([csvContent], {
+      type: "text/csv;charset=utf-8;",
+    });
 
-      URL.revokeObjectURL(url);
-    } finally {
-      setIsExporting(false);
-    }
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `receiptr-export-${new Date()
+      .toISOString()
+      .slice(0, 10)}.csv`;
+    link.click();
+
+    URL.revokeObjectURL(url);
   }
 
   const totalSpending = filteredReceipts.reduce(
@@ -428,8 +451,7 @@ export default function Dashboard() {
           <SummaryCard
             receiptCount={filteredReceipts.length}
             totalSpending={totalSpending}
-            isExporting={isExporting}
-            exportPackage={exportPackage}
+            exportCSV={exportCSV}
           />
         </div>
 

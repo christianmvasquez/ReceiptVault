@@ -1,15 +1,13 @@
 type SummaryCardProps = {
   receiptCount: number;
   totalSpending: number;
-  isExporting: boolean;
-  exportPackage: () => void;
+  exportCSV: () => void;
 };
 
 export default function SummaryCard({
   receiptCount,
   totalSpending,
-  isExporting,
-  exportPackage,
+  exportCSV,
 }: SummaryCardProps) {
   return (
     <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
@@ -22,11 +20,10 @@ export default function SummaryCard({
       <p className="text-3xl font-bold">${totalSpending.toFixed(2)}</p>
 
       <button
-        onClick={exportPackage}
-        disabled={isExporting}
-        className="mt-8 w-full rounded-xl bg-[#6D5EF5] p-3 font-semibold text-white hover:bg-[#5B4CF0] disabled:cursor-not-allowed disabled:opacity-70"
+        onClick={exportCSV}
+        className="mt-8 w-full rounded-xl bg-[#6D5EF5] p-3 font-semibold text-white hover:bg-[#5B4CF0]"
       >
-        {isExporting ? "Preparing Export..." : "Export Package"}
+        Export CSV
       </button>
     </div>
   );
