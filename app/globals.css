@@ -30,7 +30,8 @@ body {
   isolation: isolate;
   overflow: hidden;
   background:
-    linear-gradient(135deg, #fbf7ff 0%, #eee7ff 36%, #f8fbff 100%);
+    radial-gradient(circle at 18% 18%, #f1e7ff 0 10%, transparent 28%),
+    linear-gradient(135deg, #f6efff 0%, #e7dcff 34%, #d8c7ff 62%, #f8fbff 100%);
 }
 
 .app-background::before {
@@ -41,35 +42,40 @@ body {
   pointer-events: none;
   background-image:
     conic-gradient(
-      from 230deg at 14% 16%,
-      transparent 0deg,
-      rgba(76, 29, 149, 0.1) 32deg,
-      rgba(124, 58, 237, 0.34) 58deg,
-      rgba(192, 132, 252, 0.48) 78deg,
-      rgba(248, 250, 252, 0.15) 104deg,
-      transparent 132deg
+      from 238deg at 18% 24%,
+      rgba(255, 255, 255, 0.78) 0deg,
+      rgba(216, 180, 254, 0.82) 28deg,
+      rgba(139, 92, 246, 0.76) 58deg,
+      rgba(49, 22, 101, 0.72) 92deg,
+      rgba(21, 16, 48, 0.38) 124deg,
+      transparent 164deg
     ),
     conic-gradient(
-      from 42deg at 88% 18%,
-      transparent 0deg,
-      rgba(91, 33, 182, 0.36) 38deg,
-      rgba(168, 85, 247, 0.44) 70deg,
-      rgba(251, 191, 36, 0.16) 86deg,
-      transparent 128deg
+      from 32deg at 88% 15%,
+      rgba(17, 24, 39, 0.72) 0deg,
+      rgba(45, 27, 105, 0.78) 28deg,
+      rgba(109, 40, 217, 0.72) 62deg,
+      rgba(196, 181, 253, 0.66) 96deg,
+      transparent 138deg
     ),
     conic-gradient(
-      from 310deg at 38% 78%,
+      from 308deg at 42% 82%,
       rgba(248, 250, 252, 0) 0deg,
-      rgba(109, 40, 217, 0.36) 42deg,
-      rgba(216, 180, 254, 0.48) 72deg,
-      rgba(251, 191, 36, 0.18) 92deg,
-      transparent 130deg
+      rgba(76, 29, 149, 0.76) 38deg,
+      rgba(147, 51, 234, 0.72) 64deg,
+      rgba(233, 213, 255, 0.72) 88deg,
+      rgba(30, 27, 75, 0.52) 124deg,
+      transparent 158deg
     ),
-    radial-gradient(ellipse at 50% 42%, rgba(255, 255, 255, 0.78), transparent 32%),
-    linear-gradient(115deg, transparent 12%, rgba(251, 191, 36, 0.18) 13%, transparent 15%),
-    linear-gradient(145deg, transparent 62%, rgba(109, 40, 217, 0.2) 64%, transparent 68%);
-  filter: blur(10px) saturate(1.18);
-  transform: rotate(-5deg);
+    radial-gradient(ellipse at 38% 38%, rgba(255, 255, 255, 0.86), transparent 22%),
+    radial-gradient(ellipse at 78% 56%, rgba(124, 58, 237, 0.42), transparent 30%),
+    radial-gradient(ellipse at 6% 74%, rgba(76, 29, 149, 0.5), transparent 34%),
+    linear-gradient(112deg, transparent 10%, rgba(251, 191, 36, 0.38) 11%, transparent 12.5%),
+    linear-gradient(136deg, transparent 35%, rgba(255, 255, 255, 0.55) 36%, transparent 37.5%),
+    linear-gradient(158deg, transparent 62%, rgba(251, 191, 36, 0.28) 63%, transparent 64.5%);
+  filter: blur(5px) saturate(1.35) contrast(1.05);
+  opacity: 0.95;
+  transform: rotate(-4deg) scale(1.04);
 }
 
 .app-background::after {
@@ -79,14 +85,31 @@ body {
   z-index: -1;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0.62)),
+    radial-gradient(circle at 18% 34%, rgba(255, 255, 255, 0.52) 0 1px, transparent 2px),
+    radial-gradient(circle at 72% 18%, rgba(255, 255, 255, 0.34) 0 1px, transparent 2px),
+    radial-gradient(circle at 61% 73%, rgba(255, 255, 255, 0.28) 0 1px, transparent 2px),
+    linear-gradient(rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.46)),
     repeating-linear-gradient(
       118deg,
       transparent 0,
-      transparent 26px,
-      rgba(76, 29, 149, 0.05) 27px,
-      transparent 29px
+      transparent 22px,
+      rgba(31, 16, 79, 0.09) 23px,
+      transparent 25px
+    ),
+    repeating-linear-gradient(
+      26deg,
+      transparent 0,
+      transparent 74px,
+      rgba(251, 191, 36, 0.13) 75px,
+      transparent 78px
     );
+  background-size:
+    180px 180px,
+    220px 220px,
+    240px 240px,
+    auto,
+    auto,
+    auto;
 }
 
 .app-background > * {
