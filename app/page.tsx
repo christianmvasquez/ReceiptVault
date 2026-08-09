@@ -3,7 +3,7 @@ import BrandLogo from "@/components/BrandLogo";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white text-gray-900">
+    <main className="app-background min-h-screen text-gray-900">
 
       {/* Navbar */}
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-8 py-8">

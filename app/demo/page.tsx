@@ -108,7 +108,7 @@ export default function DemoPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white px-6 py-8 text-gray-900">
+    <main className="app-background min-h-screen px-6 py-8 text-gray-900">
       <nav className="mx-auto flex max-w-6xl items-center justify-between">
         <Link href="/" aria-label="Receiptr home">
           <BrandLogo className="h-14 w-auto" />

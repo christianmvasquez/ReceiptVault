@@ -57,7 +57,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-white px-6">
+    <main className="app-background flex min-h-screen items-center justify-center px-6">
       <div className="w-full max-w-md rounded-3xl border border-gray-200 bg-white p-10 shadow-sm">
         <BrandLogo className="h-16 w-auto" />
 
