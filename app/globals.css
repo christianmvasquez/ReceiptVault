@@ -26,23 +26,70 @@ body {
 }
 
 .app-background {
-  background-color: #f8fafc;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, #fbf7ff 0%, #eee7ff 36%, #f8fbff 100%);
+}
+
+.app-background::before {
+  content: "";
+  position: fixed;
+  inset: -18%;
+  z-index: -2;
+  pointer-events: none;
   background-image:
-    linear-gradient(135deg, rgba(109, 94, 245, 0.12), transparent 28rem),
-    linear-gradient(225deg, rgba(20, 184, 166, 0.1), transparent 24rem),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.92)),
-    linear-gradient(rgba(15, 23, 42, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15, 23, 42, 0.045) 1px, transparent 1px);
-  background-position:
-    left top,
-    right top,
-    center,
-    center,
-    center;
-  background-size:
-    auto,
-    auto,
-    auto,
-    42px 42px,
-    42px 42px;
+    conic-gradient(
+      from 230deg at 14% 16%,
+      transparent 0deg,
+      rgba(76, 29, 149, 0.1) 32deg,
+      rgba(124, 58, 237, 0.34) 58deg,
+      rgba(192, 132, 252, 0.48) 78deg,
+      rgba(248, 250, 252, 0.15) 104deg,
+      transparent 132deg
+    ),
+    conic-gradient(
+      from 42deg at 88% 18%,
+      transparent 0deg,
+      rgba(91, 33, 182, 0.36) 38deg,
+      rgba(168, 85, 247, 0.44) 70deg,
+      rgba(251, 191, 36, 0.16) 86deg,
+      transparent 128deg
+    ),
+    conic-gradient(
+      from 310deg at 38% 78%,
+      rgba(248, 250, 252, 0) 0deg,
+      rgba(109, 40, 217, 0.36) 42deg,
+      rgba(216, 180, 254, 0.48) 72deg,
+      rgba(251, 191, 36, 0.18) 92deg,
+      transparent 130deg
+    ),
+    radial-gradient(ellipse at 50% 42%, rgba(255, 255, 255, 0.78), transparent 32%),
+    linear-gradient(115deg, transparent 12%, rgba(251, 191, 36, 0.18) 13%, transparent 15%),
+    linear-gradient(145deg, transparent 62%, rgba(109, 40, 217, 0.2) 64%, transparent 68%);
+  filter: blur(10px) saturate(1.18);
+  transform: rotate(-5deg);
+}
+
+.app-background::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0.62)),
+    repeating-linear-gradient(
+      118deg,
+      transparent 0,
+      transparent 26px,
+      rgba(76, 29, 149, 0.05) 27px,
+      transparent 29px
+    );
+}
+
+.app-background > * {
+  position: relative;
+  z-index: 1;
 }
