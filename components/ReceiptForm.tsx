@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 type ReceiptFormProps = {
   vendor: string;
   amount: string;
@@ -64,12 +62,10 @@ export default function ReceiptForm({
 
       {!isEditing && receiptPreviewUrl && (
         <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={receiptPreviewUrl}
             alt="Receipt preview"
-            width={450}
-            height={600}
-            unoptimized
             className="max-h-96 w-full object-contain"
           />
         </div>

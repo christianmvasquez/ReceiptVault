@@ -34,6 +34,7 @@ export default function Dashboard() {
   const [category, setCategory] = useState("");
   const [notes, setNotes] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [receiptUploadFile, setReceiptUploadFile] = useState<File | null>(null);
   const [receiptPreviewUrl, setReceiptPreviewUrl] = useState("");
   const [receipts, setReceipts] = useState<Receipt[]>([]);
   const [search, setSearch] = useState("");
@@ -90,6 +91,7 @@ export default function Dashboard() {
     setCategory(receipt.category);
     setNotes(receipt.notes || "");
     setFile(null);
+    setReceiptUploadFile(null);
     setReceiptPreviewUrl("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -101,18 +103,40 @@ export default function Dashboard() {
     setCategory("");
     setNotes("");
     setFile(null);
+    setReceiptUploadFile(null);
     setReceiptPreviewUrl("");
     setScanMessage("");
   }
 
-  function readFileAsJpegDataUrl(selectedFile: File) {
-    return new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
+  function canvasToJpegBlob(canvas: HTMLCanvasElement) {
+    return new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            resolve(blob);
+            return;
+          }
 
-      reader.onload = () => {
-        const image = new Image();
+          reject(new Error("Could not prepare receipt image."));
+        },
+        "image/jpeg",
+        0.86
+      );
+    });
+  }
 
-        image.onload = () => {
+  function prepareReceiptImage(selectedFile: File) {
+    return new Promise<{ dataUrl: string; file: File }>((resolve, reject) => {
+      if (!selectedFile.type.startsWith("image/")) {
+        reject(new Error("Choose a receipt image from your phone or computer."));
+        return;
+      }
+
+      const objectUrl = URL.createObjectURL(selectedFile);
+      const image = new Image();
+
+      image.onload = async () => {
+        try {
           const canvas = document.createElement("canvas");
           const context = canvas.getContext("2d");
 
@@ -121,30 +145,49 @@ export default function Dashboard() {
             return;
           }
 
-          canvas.width = image.naturalWidth;
-          canvas.height = image.naturalHeight;
-          context.drawImage(image, 0, 0);
-
-          resolve(canvas.toDataURL("image/jpeg", 0.9));
-        };
-
-        image.onerror = () => {
-          reject(
-            new Error(
-              "This image format could not be read. Try a JPG, PNG, or screenshot."
-            )
+          const maxSide = 1800;
+          const scale = Math.min(
+            1,
+            maxSide / Math.max(image.naturalWidth, image.naturalHeight)
           );
-        };
 
-        image.src = String(reader.result);
+          canvas.width = Math.round(image.naturalWidth * scale);
+          canvas.height = Math.round(image.naturalHeight * scale);
+          context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+          const blob = await canvasToJpegBlob(canvas);
+          const fileName = selectedFile.name.replace(/\.[^.]+$/, "") || "receipt";
+          const jpegFile = new File([blob], `${fileName}.jpg`, {
+            type: "image/jpeg",
+          });
+
+          resolve({
+            dataUrl: canvas.toDataURL("image/jpeg", 0.86),
+            file: jpegFile,
+          });
+        } catch {
+          reject(new Error("Could not prepare receipt image."));
+        } finally {
+          URL.revokeObjectURL(objectUrl);
+        }
       };
-      reader.onerror = () => reject(new Error("Could not read receipt image."));
-      reader.readAsDataURL(selectedFile);
+
+      image.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        reject(
+          new Error(
+            "This phone photo format could not be read. Try taking a screenshot of the receipt and uploading that."
+          )
+        );
+      };
+
+      image.src = objectUrl;
     });
   }
 
   async function handleFileChange(selectedFile: File | null) {
     setFile(selectedFile);
+    setReceiptUploadFile(null);
     setReceiptPreviewUrl("");
     setScanMessage("");
 
@@ -154,14 +197,15 @@ export default function Dashboard() {
     setScanMessage("Reading receipt with AI...");
 
     try {
-      const imageUrl = await readFileAsJpegDataUrl(selectedFile);
-      setReceiptPreviewUrl(imageUrl);
+      const preparedImage = await prepareReceiptImage(selectedFile);
+      setReceiptUploadFile(preparedImage.file);
+      setReceiptPreviewUrl(preparedImage.dataUrl);
       const response = await fetch("/api/scan-receipt", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ imageUrl }),
+        body: JSON.stringify({ imageUrl: preparedImage.dataUrl }),
       });
 
       const data = await response.json();
@@ -216,7 +260,8 @@ export default function Dashboard() {
   }
 
   async function uploadReceiptImage() {
-    if (!file) return "";
+    const imageFile = receiptUploadFile || file;
+    if (!imageFile) return "";
 
     const {
       data: { user },
@@ -227,13 +272,15 @@ export default function Dashboard() {
       return "";
     }
 
-    const fileExt = file.name.split(".").pop() || "png";
+    const fileExt = imageFile.name.split(".").pop() || "jpg";
     const safeFileName = `${Date.now()}-${crypto.randomUUID()}.${fileExt}`;
     const filePath = `${user.id}/${safeFileName}`;
 
     const { error: uploadError } = await supabase.storage
       .from("receipts")
-      .upload(filePath, file);
+      .upload(filePath, imageFile, {
+        contentType: imageFile.type || "image/jpeg",
+      });
 
     if (uploadError) {
       alert(uploadError.message);
@@ -302,6 +349,7 @@ export default function Dashboard() {
     setCategory("");
     setNotes("");
     setFile(null);
+    setReceiptUploadFile(null);
     setReceiptPreviewUrl("");
 
     await loadReceipts();
