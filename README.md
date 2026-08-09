@@ -58,10 +58,12 @@ In Stripe Dashboard, create a webhook endpoint:
 https://your-vercel-domain.vercel.app/api/stripe-webhook
 ```
 
-Subscribe it to this event:
+Subscribe it to these events:
 
 ```txt
 checkout.session.completed
+customer.subscription.updated
+customer.subscription.deleted
 ```
 
 Copy the webhook signing secret into `STRIPE_WEBHOOK_SECRET` in Vercel.

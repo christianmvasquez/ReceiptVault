@@ -31,6 +31,43 @@ async function findUserIdByEmail(email: string) {
   return null;
 }
 
+async function findUserByStripeIds({
+  customerId,
+  subscriptionId,
+}: {
+  customerId?: string;
+  subscriptionId?: string;
+}) {
+  const supabase = createAdminClient();
+  let page = 1;
+
+  while (page <= 10) {
+    const { data, error } = await supabase.auth.admin.listUsers({
+      page,
+      perPage: 1000,
+    });
+
+    if (error) throw error;
+
+    const match = data.users.find((user) => {
+      const metadata = user.user_metadata || {};
+
+      return (
+        (!!subscriptionId &&
+          metadata.stripe_subscription_id === subscriptionId) ||
+        (!!customerId && metadata.stripe_customer_id === customerId)
+      );
+    });
+
+    if (match) return match;
+    if (data.users.length < 1000) return null;
+
+    page += 1;
+  }
+
+  return null;
+}
+
 async function markSubscribed(session: Stripe.Checkout.Session) {
   const supabase = createAdminClient();
   const metadata = session.metadata || {};
@@ -47,6 +84,7 @@ async function markSubscribed(session: Stripe.Checkout.Session) {
     phone: metadata.phone || "",
     address: metadata.address || "",
     subscribed: true,
+    subscription_status: "active",
     stripe_customer_id:
       typeof session.customer === "string" ? session.customer : "",
     stripe_subscription_id:
@@ -54,10 +92,18 @@ async function markSubscribed(session: Stripe.Checkout.Session) {
   };
 
   if (metadata.user_id) {
+    const { data, error: getUserError } =
+      await supabase.auth.admin.getUserById(metadata.user_id);
+
+    if (getUserError) throw getUserError;
+
     const { error } = await supabase.auth.admin.updateUserById(
       metadata.user_id,
       {
-        user_metadata: userMetadata,
+        user_metadata: {
+          ...(data.user?.user_metadata || {}),
+          ...userMetadata,
+        },
       }
     );
 
@@ -68,8 +114,16 @@ async function markSubscribed(session: Stripe.Checkout.Session) {
   const existingUserId = await findUserIdByEmail(email);
 
   if (existingUserId) {
+    const { data, error: getUserError } =
+      await supabase.auth.admin.getUserById(existingUserId);
+
+    if (getUserError) throw getUserError;
+
     const { error } = await supabase.auth.admin.updateUserById(existingUserId, {
-      user_metadata: userMetadata,
+      user_metadata: {
+        ...(data.user?.user_metadata || {}),
+        ...userMetadata,
+      },
       email_confirm: true,
     });
 
@@ -89,6 +143,39 @@ async function markSubscribed(session: Stripe.Checkout.Session) {
   const { error } = await supabase.auth.admin.inviteUserByEmail(email, {
     data: userMetadata,
     redirectTo: passwordSetupRedirect,
+  });
+
+  if (error) throw error;
+}
+
+async function syncSubscriptionAccess(subscription: Stripe.Subscription) {
+  const customerId =
+    typeof subscription.customer === "string" ? subscription.customer : "";
+  const user = await findUserByStripeIds({
+    customerId,
+    subscriptionId: subscription.id,
+  });
+
+  if (!user) {
+    console.warn(
+      `No Supabase user found for Stripe subscription ${subscription.id}.`
+    );
+    return;
+  }
+
+  const activeStatuses = ["active", "trialing"];
+  const isSubscribed = activeStatuses.includes(subscription.status);
+  const metadata = user.user_metadata || {};
+  const supabase = createAdminClient();
+
+  const { error } = await supabase.auth.admin.updateUserById(user.id, {
+    user_metadata: {
+      ...metadata,
+      subscribed: isSubscribed,
+      subscription_status: subscription.status,
+      stripe_customer_id: customerId || metadata.stripe_customer_id || "",
+      stripe_subscription_id: subscription.id,
+    },
   });
 
   if (error) throw error;
@@ -128,6 +215,13 @@ export async function POST(request: Request) {
   try {
     if (event.type === "checkout.session.completed") {
       await markSubscribed(event.data.object);
+    }
+
+    if (
+      event.type === "customer.subscription.deleted" ||
+      event.type === "customer.subscription.updated"
+    ) {
+      await syncSubscriptionAccess(event.data.object);
     }
 
     return NextResponse.json({ received: true });
