@@ -165,9 +165,6 @@ export default function DemoPage() {
             <h2 className="text-2xl font-semibold">
               Write-Offs by Category
             </h2>
-            <p className="mt-2 text-gray-500">
-              Track possible business deductions by category before tax time.
-            </p>
           </div>
 
           <div className="space-y-5">
