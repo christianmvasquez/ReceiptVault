@@ -45,12 +45,20 @@ export default function ReceiptForm({
       </h2>
 
       {!isEditing && (
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
-          className="mt-6 w-full rounded-xl border border-gray-200 bg-gray-50 p-3"
-        />
+        <label className="mt-6 block cursor-pointer rounded-2xl border border-dashed border-violet-300 bg-violet-50/70 p-5 text-center transition hover:bg-violet-50">
+          <span className="block font-semibold text-violet-800">
+            Upload receipt image
+          </span>
+          <span className="mt-1 block text-sm text-violet-600">
+            Choose a photo or screenshot
+          </span>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
+            className="sr-only"
+          />
+        </label>
       )}
 
       {!isEditing && file && (
@@ -105,7 +113,7 @@ export default function ReceiptForm({
 
       <textarea
         className="mt-4 min-h-24 w-full resize-y rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none focus:border-violet-500"
-        placeholder="Notes, business purpose, or CPA context"
+        placeholder="Business purpose or notes for CPA"
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
       />

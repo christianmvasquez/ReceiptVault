@@ -27,18 +27,15 @@ export default function DashboardStats({ receipts }: DashboardStatsProps) {
     <div className="mt-8 grid gap-4 md:grid-cols-2">
       <div className="rounded-3xl bg-[#6D5EF5] p-5 text-white shadow-sm">
         <p className="text-sm font-medium text-violet-100">
-          Possible Taxable Income Reduction
+          Total Possible Deductions
         </p>
         <p className="mt-2 text-3xl font-bold">
           {formatCurrency(totalWriteOffs)}
         </p>
-        <p className="mt-2 text-sm text-violet-100">
-          If expenses qualify as deductible
-        </p>
       </div>
 
       <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-        <p className="text-sm font-medium text-gray-500">Receipts Saved</p>
+        <p className="text-sm font-medium text-gray-500">Receipts</p>
         <p className="mt-2 text-3xl font-bold">{receipts.length}</p>
       </div>
     </div>

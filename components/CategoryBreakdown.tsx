@@ -30,7 +30,7 @@ export default function CategoryBreakdown({
   return (
     <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
       <div className="mb-6">
-        <h2 className="text-2xl font-semibold">Write-Offs by Category</h2>
+        <h2 className="text-2xl font-semibold">Spending by Category</h2>
       </div>
 
       <div className="space-y-5">
@@ -54,15 +54,13 @@ export default function CategoryBreakdown({
 
         {sorted.length === 0 && (
           <p className="rounded-2xl bg-gray-50 p-5 text-gray-500">
-            Upload receipts to start tracking possible write-offs.
+            Upload receipts to start tracking spending by category.
           </p>
         )}
       </div>
 
       <p className="mt-6 text-sm text-gray-400">
-        Write-offs usually reduce taxable income, not taxes dollar-for-dollar.
-        Eligibility depends on business use and tax rules. Confirm deductions
-        with a tax professional.
+        Confirm deductions with a tax professional.
       </p>
     </div>
   );

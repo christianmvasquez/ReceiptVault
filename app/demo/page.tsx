@@ -142,18 +142,15 @@ export default function DemoPage() {
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           <div className="rounded-3xl bg-[#6D5EF5] p-5 text-white shadow-sm">
             <p className="text-sm font-medium text-violet-100">
-              Possible Taxable Income Reduction
+              Total Possible Deductions
             </p>
             <p className="mt-2 text-3xl font-bold">
               {formatCurrency(totalWriteOffs)}
             </p>
-            <p className="mt-2 text-sm text-violet-100">
-              If expenses qualify as deductible
-            </p>
           </div>
 
           <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-            <p className="text-sm font-medium text-gray-500">Receipts Saved</p>
+            <p className="text-sm font-medium text-gray-500">Receipts</p>
             <p className="mt-2 text-3xl font-bold">
               {filteredReceipts.length}
             </p>
@@ -163,7 +160,7 @@ export default function DemoPage() {
         <section className="mt-8 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
           <div className="mb-6">
             <h2 className="text-2xl font-semibold">
-              Write-Offs by Category
+              Spending by Category
             </h2>
           </div>
 
@@ -189,9 +186,7 @@ export default function DemoPage() {
           </div>
 
           <p className="mt-6 text-sm text-gray-400">
-            Write-offs usually reduce taxable income, not taxes
-            dollar-for-dollar. Eligibility depends on business use and tax
-            rules.
+            Confirm deductions with a tax professional.
           </p>
         </section>
 

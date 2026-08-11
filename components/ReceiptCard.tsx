@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 type Receipt = {
   id: string;
   vendor: string;
@@ -61,15 +59,14 @@ export default function ReceiptCard({
       </div>
 
       {receipt.image_url && (
-        <div className="mt-5">
-          <Image
-            src={receipt.image_url}
-            alt={receipt.vendor}
-            width={450}
-            height={600}
-            className="rounded-xl border border-gray-200"
-          />
-        </div>
+        <a
+          href={receipt.image_url}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-4 inline-flex rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+        >
+          View receipt image
+        </a>
       )}
     </div>
   );

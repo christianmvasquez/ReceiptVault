@@ -435,11 +435,6 @@ export default function Dashboard() {
     URL.revokeObjectURL(url);
   }
 
-  const totalSpending = filteredReceipts.reduce(
-    (sum, receipt) => sum + Number(receipt.amount),
-    0
-  );
-
   if (isCheckingAccess) {
     return (
       <main className="app-background flex min-h-screen items-center justify-center text-gray-900">
@@ -497,8 +492,6 @@ export default function Dashboard() {
           />
 
           <SummaryCard
-            receiptCount={filteredReceipts.length}
-            totalSpending={totalSpending}
             exportCSV={exportCSV}
           />
         </div>
