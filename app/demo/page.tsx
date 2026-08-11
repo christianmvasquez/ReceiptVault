@@ -157,7 +157,6 @@ export default function DemoPage() {
             <p className="mt-2 text-3xl font-bold">
               {filteredReceipts.length}
             </p>
-            <p className="mt-2 text-sm text-gray-500">Ready for tax time</p>
           </div>
         </div>
 

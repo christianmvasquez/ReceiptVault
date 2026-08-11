@@ -40,7 +40,6 @@ export default function DashboardStats({ receipts }: DashboardStatsProps) {
       <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
         <p className="text-sm font-medium text-gray-500">Receipts Saved</p>
         <p className="mt-2 text-3xl font-bold">{receipts.length}</p>
-        <p className="mt-2 text-sm text-gray-500">Ready for tax time</p>
       </div>
     </div>
   );
