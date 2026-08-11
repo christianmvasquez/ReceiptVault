@@ -23,21 +23,8 @@ export default function DashboardStats({ receipts }: DashboardStatsProps) {
     0
   );
 
-  const categoryTotals = receipts.reduce<Record<string, number>>(
-    (totals, receipt) => {
-      totals[receipt.category] =
-        (totals[receipt.category] || 0) + Number(receipt.amount);
-      return totals;
-    },
-    {}
-  );
-
-  const topCategory = Object.entries(categoryTotals).sort(
-    (a, b) => b[1] - a[1]
-  )[0];
-
   return (
-    <div className="mt-8 grid gap-4 md:grid-cols-3">
+    <div className="mt-8 grid gap-4 md:grid-cols-2">
       <div className="rounded-3xl bg-[#6D5EF5] p-5 text-white shadow-sm">
         <p className="text-sm font-medium text-violet-100">
           Possible Taxable Income Reduction
@@ -54,14 +41,6 @@ export default function DashboardStats({ receipts }: DashboardStatsProps) {
         <p className="text-sm font-medium text-gray-500">Receipts Saved</p>
         <p className="mt-2 text-3xl font-bold">{receipts.length}</p>
         <p className="mt-2 text-sm text-gray-500">Ready for tax time</p>
-      </div>
-
-      <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-        <p className="text-sm font-medium text-gray-500">Top Write-Off</p>
-        <p className="mt-2 text-3xl font-bold">{topCategory?.[0] || "None"}</p>
-        <p className="mt-2 text-sm text-gray-500">
-          {topCategory ? formatCurrency(topCategory[1]) : "No receipts yet"}
-        </p>
       </div>
     </div>
   );

@@ -100,7 +100,6 @@ export default function DemoPage() {
     ...categoryTotals.map((item) => item.total),
     1
   );
-  const topCategory = [...categoryTotals].sort((a, b) => b.total - a.total)[0];
 
   function runDemoScan() {
     setScanState("scanning");
@@ -140,7 +139,7 @@ export default function DemoPage() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
           <div className="rounded-3xl bg-[#6D5EF5] p-5 text-white shadow-sm">
             <p className="text-sm font-medium text-violet-100">
               Possible Taxable Income Reduction
@@ -160,35 +159,16 @@ export default function DemoPage() {
             </p>
             <p className="mt-2 text-sm text-gray-500">Ready for tax time</p>
           </div>
-
-          <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-            <p className="text-sm font-medium text-gray-500">Top Write-Off</p>
-            <p className="mt-2 text-3xl font-bold">
-              {topCategory?.category || "None"}
-            </p>
-            <p className="mt-2 text-sm text-gray-500">
-              {topCategory ? formatCurrency(topCategory.total) : "No receipts"}
-            </p>
-          </div>
         </div>
 
         <section className="mt-8 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-            <div>
-              <h2 className="text-2xl font-semibold">
-                Write-Offs by Category
-              </h2>
-              <p className="mt-2 text-gray-500">
-                Track possible business deductions by category before tax time.
-              </p>
-            </div>
-
-            <div className="rounded-2xl bg-violet-50 px-5 py-4 text-violet-900">
-              <p className="text-sm font-semibold">Potential Deductions</p>
-              <p className="mt-1 text-2xl font-bold">
-                {formatCurrency(totalWriteOffs)}
-              </p>
-            </div>
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold">
+              Write-Offs by Category
+            </h2>
+            <p className="mt-2 text-gray-500">
+              Track possible business deductions by category before tax time.
+            </p>
           </div>
 
           <div className="space-y-5">
